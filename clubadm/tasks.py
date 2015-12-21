@@ -24,11 +24,14 @@ def match_members(year):
         member.giftee = giftee
         member.save()
         logger.debug('%s отправляет подарок %s', member, giftee)
-        member.send_notification(
-            'Пора отправлять подарок!',
-            render_to_string('clubadm/notification_match.html', {
-                'year': year
-            }))
+        try:
+            member.send_notification(
+                'Пора отправлять подарок!',
+                render_to_string('clubadm/notification_match.html', {
+                    'year': year
+                }))
+        except:
+            logger.warning('Не удалось отправить уведомление %s.', member)
 
 
 @shared_task
