@@ -3,7 +3,7 @@ from fabric.contrib.project import rsync_project
 
 
 env.user = 'root'
-env.hosts = ['dev3.habra-adm.ru']
+env.hosts = ['habra-adm.ru']
 
 
 def pack():
