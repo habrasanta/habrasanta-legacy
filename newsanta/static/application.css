@@ -1,0 +1,700 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+body {
+  background: #fff;
+  border-top: 89px solid #aab1cd;
+  color: #496063;
+  font: 13px/1.3 'PT Sans Caption', Arial, sans-serif;
+}
+
+a {
+  color: #298dbb;
+}
+
+a:hover {
+  color: #22cfb2;
+}
+
+abbr {
+  border-bottom: 1px dashed;
+  cursor: help;
+}
+
+.btn {
+  color: #fff !important;
+  display: inline-block;
+  line-height: 35px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.login-btn {
+  background: url(gt-logo-35.png) no-repeat #8491b7;
+  font-weight: bold;
+  padding-left: 35px;
+  width: 185px;
+}
+
+.timetable {
+  background: #fff;
+  height: 89px;
+  position: fixed;
+  top: 0;
+  transition: top 0.2s ease-in-out;
+  width: 100%;
+  z-index: 1000;
+}
+
+.timetable.nav-up {
+  top: -89px;
+}
+
+.timetable-inner {
+  margin: 0 auto;
+  padding: 27px 10px;
+  width: 940px;
+}
+
+.timetable-phase {
+  float: left;
+  margin-right: 20px;
+  width: 140px;
+}
+
+.timetable-phase time {
+  font-weight: bold;
+}
+
+.timetable-phase p {
+  margin-top: 1px;
+}
+
+.timetable-account {
+  float: right;
+  line-height: 35px;
+}
+
+.timetable-account .username {
+  font-weight: bold;
+  color: #558ea1;
+}
+
+.timetable-account .logout {
+  margin-left: 30px;
+}
+
+.timetable-account .avatar {
+  height: 35px;
+  margin-right: 10px;
+  vertical-align: middle;
+  width: 35px;
+}
+
+.snow-container {
+  background: #aab1cd;
+}
+
+.snowflake {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 3em;
+  position: absolute;
+  top: 0;
+  z-index: 0;
+
+  -webkit-animation-name: falling;
+     -moz-animation-name: falling;
+      -ms-animation-name: falling;
+       -o-animation-name: falling;
+          animation-name: falling;
+  -webkit-animation-duration: 5s;
+     -moz-animation-duration: 5s;
+      -ms-animation-duration: 5s;
+       -o-animation-duration: 5s;
+          animation-duration: 5s;
+  -webkit-animation-timing-function: linear;
+     -moz-animation-timing-function: linear;
+      -ms-animation-timing-function: linear;
+       -o-animation-timing-function: linear;
+          animation-timing-function: linear;
+}
+
+.thing {
+  background: url(things.png);
+}
+
+.thing-candy {
+  background-position: -39px -25px;
+  height: 37px;
+  width: 73px;
+}
+
+.thing-candy2 {
+  background-position: -38px 0;
+  height: 25px;
+  width: 116px;
+}
+
+.thing-bitcoin {
+  height: 65px;
+  width: 38px;
+}
+
+.thing-snowflake {
+  background-position: 0 -65px;
+  height: 120px;
+  opacity: 0.4;
+  width: 120px;
+
+  -webkit-animation-duration: 8s;
+     -moz-animation-duration: 8s;
+      -ms-animation-duration: 8s;
+       -o-animation-duration: 8s;
+          animation-duration: 8s;
+  -webkit-animation-name: blink;
+     -moz-animation-name: blink;
+      -ms-animation-name: blink;
+       -o-animation-name: blink;
+          animation-name: blink;
+  -webkit-animation-iteration-count: infinite;
+     -moz-animation-iteration-count: infinite;
+      -ms-animation-iteration-count: infinite;
+       -o-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+}
+
+.thing-snowflake2 {
+  background-position: 0 -185px;
+  height: 112px;
+  opacity: 0.4;
+  width: 118px;
+
+  -webkit-animation-delay: 4s;
+     -moz-animation-delay: 4s;
+      -ms-animation-delay: 4s;
+       -o-animation-delay: 4s;
+          animation-delay: 4s;
+  -webkit-animation-duration: 8s;
+     -moz-animation-duration: 8s;
+      -ms-animation-duration: 8s;
+       -o-animation-duration: 8s;
+          animation-duration: 8s;
+  -webkit-animation-name: blink;
+     -moz-animation-name: blink;
+      -ms-animation-name: blink;
+       -o-animation-name: blink;
+          animation-name: blink;
+  -webkit-animation-iteration-count: infinite;
+     -moz-animation-iteration-count: infinite;
+      -ms-animation-iteration-count: infinite;
+       -o-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+}
+
+.logo {
+  background: url(logo.png);
+  height: 83px;
+  width: 185px;
+}
+
+.cloud {
+  background: url(cloud.png);
+  font-family: 'PT Sans Caption', Arial, sans-serif;
+  font-size: 13px;
+  height: 83px;
+  padding: 60px 40px 60px 60px;
+  text-align: center;
+  text-transform: none;
+  width: 262px;
+}
+
+.banner {
+  height: 560px;
+}
+
+.banner .logo {
+  position: absolute;
+  margin-top: 85px;
+  margin-left: 377px;
+}
+
+.banner .santa {
+  height: 367px;
+  position: absolute;
+  margin-top: 215px;
+  margin-left: -5px;
+  width: 346px;
+}
+
+.banner .tree {
+  position: absolute;
+  margin-top: 34px;
+  margin-left: 630px;
+}
+
+.banner .thing {
+  position: absolute;
+}
+
+.banner .thing-snowflake {
+  margin-top: 45px;
+  margin-left: 32px;
+}
+
+.banner .thing-snowflake2 {
+  margin-top: 216px;
+  margin-left: -80px;
+}
+
+.banner .thing-candy {
+  margin-top: 553px;
+  margin-left: 755px;
+}
+
+.banner .thing-bitcoin {
+  margin-top: 526px;
+  margin-left: 847px;
+}
+
+.banner-inner {
+  margin: 0 auto;
+  padding: 0 10px;
+  width: 940px;
+}
+
+.banner-welcome {
+  color: #476162;
+  font-family: 'PT Sans Narrow', Arial, sans-serif;
+  font-size: 24px;
+  position: absolute;
+  margin-top: 235px;
+  text-align: center;
+  text-transform: uppercase;
+  width: 940px;
+}
+
+.banner-welcome .cloud {
+  display: none;
+  position: absolute;
+  margin-top: -190px;
+  margin-left: 620px;
+  z-index: 800;
+}
+
+.banner-welcome h2 {
+  font-weight: bold;
+  z-index: 900;
+}
+
+.banner-members {
+  color: #fff;
+  position: absolute;
+  margin-top: 340px;
+  text-align: center;
+  text-transform: uppercase;
+  width: 940px;
+}
+
+.banner-counter {
+  margin: 10px 0;
+}
+
+.banner-counter b {
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  font-family: 'PT Sans Narrow', Arial, sans-serif;
+  font-size: 80px;
+  display: inline-block;
+  line-height: 80px;
+  margin: 0px 2px;
+  padding: 0px 10px;
+}
+
+.section-inner {
+  margin: 0 auto;
+  padding: 60px 10px;
+  width: 940px;
+}
+
+#description {
+  margin-top: 80px;
+}
+
+#description article {
+  display: inline-block;
+  text-align: center;
+  width: 460px;
+}
+
+#description img {
+  height: 193px;
+  width: 189px;
+}
+
+#description p {
+  line-height: 1.5;
+}
+
+#description h1 {
+  font-family: 'PT Sans Narrow', Arial, sans-serif;
+  font-size: 24px;
+  padding: 20px 0;
+}
+
+#description .star {
+  height: 192px;
+  position: absolute;
+  margin-top: -100px;
+  margin-left: 420px;
+  width: 100px;
+}
+
+#super-security {
+  margin-left: 16px;
+}
+
+#summary {
+  background: #e2e3e8;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+#summary img {
+  height: 117px;
+  width: 240px;
+}
+
+#summary hgroup {
+  font-family: 'PT Sans Narrow', Arial, sans-serif;
+  font-size: 24px;
+  margin: 20px 0;
+  padding: 0px 150px;
+  text-transform: uppercase;
+}
+
+#summary h1 {
+  font-weight: bold;
+}
+
+#summary hr {
+  background: #f2f6f9;
+  border: none;
+  height: 2px;
+}
+
+#summary p {
+  padding: 0 300px 20px 320px;
+}
+
+#summary .login-btn {
+  background: url(gt-logo-53.png) no-repeat #8491b7;
+  font-size: 18px;
+  line-height: 53px;
+  padding-left: 53px;
+  width: 300px;
+}
+
+#summary .thing-candy2 {
+  position: absolute;
+  margin-top: 45px;
+  margin-left: 412px;
+}
+
+#profile {
+  height: 900px;
+}
+
+#profile .logo {
+  position: absolute;
+  margin-top: -140px;
+  margin-left: 377px;
+}
+
+#profile-inner {
+  margin: 0 auto;
+  padding: 170px 10px;
+  width: 940px;
+}
+
+#profile-inner .thing {
+  position: absolute;
+}
+
+#profile-inner .thing-snowflake {
+  margin-top: -220px;
+  margin-left: 150px;
+}
+
+#profile-inner .thing-snowflake2 {
+  margin-top: -200px;
+  margin-left: 700px;
+}
+
+#memberstats {
+  font: 17px 'PT Sans Narrow';
+  position: absolute;
+  margin-top: -100px;
+  margin-left: 0;
+  text-transform: uppercase;
+}
+
+#memberstats b {
+  font-weight: bold;
+}
+
+#membercounter {
+  font: 17px 'PT Sans Narrow';
+  position: absolute;
+  margin-top: -100px;
+  margin-left: 830px;
+  text-transform: uppercase;
+}
+
+#membercounter b {
+  font-weight: bold;
+}
+
+#snowflakebottom {
+  margin-top: 35px !important;
+  margin-left: 415px !important;
+}
+
+.card {
+  background: #e2e3e8;
+  padding: 30px;
+  height: 485px;
+  width: 395px;
+}
+
+.card-santa {
+  float: left;
+}
+
+.card-santa h3 {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 17px;
+  margin: 35px 0;
+}
+
+.card-waiting {
+  background: #fff;
+}
+
+.card-giftee {
+  margin-left: 493px;
+}
+
+.footer-inner {
+  margin: 0 auto;
+  padding: 27px 10px;
+  width: 940px;
+}
+
+#postcode {
+  width: 100px;
+}
+
+#regbutton {
+  float: right;
+  width: 250px;
+  margin-top: 35px;
+  background: #aab1cd;
+  border: 0;
+  color: #fff;
+  text-transform: uppercase;
+  padding: 12px 0;
+}
+
+#outbutton {
+  display: block;
+  margin: 0 auto;
+  width: 350px;
+  margin-top: 35px;
+  background: #aab1cd;
+  border: 0;
+  color: #fff;
+  text-transform: uppercase;
+  padding: 12px 0;
+}
+
+input[type='text'],
+textarea {
+  font: 16px/1.4 "PT Sans Narrow",Arial,sans-serif;
+  background: #fff;
+  border: 0;
+  box-sizing: border-box;
+  resize: none;
+  width: 100%;
+  color: #6e8283;
+  padding: 7px;
+  margin: 5px 0px;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+}
+
+label b {
+  font-weight: bold;
+}
+
+.footer-designer {
+  float: right;
+}
+
+.footer-feedback {
+  width: 220px;
+}
+
+@-webkit-keyframes falling {
+  0% {
+    -webkit-transition: -webkit-transform 0.3s ease;
+    -webkit-transform: translate3d(0, 89px, 0);
+  }
+  100% {
+    -webkit-transition: -webkit-transform 0.3s ease;
+    -webkit-transform: translate3d(0, 649px, 0);
+  }
+}
+
+@-moz-keyframes falling {
+  0% {
+    -moz-transition: -moz-transform 0.3s ease;
+    -moz-transform: translate3d(0, 89px, 0);
+  }
+  100% {
+    -moz-transition: -moz-transform 0.3s ease;
+    -moz-transform: translate3d(0, 649px, 0);
+  }
+}
+
+@-o-keyframes falling {
+  0% {
+    -o-transition: -o-transform 0.3s ease;
+    -o-transform: translate3d(0, 89px, 0);
+  }
+  100% {
+    -o-transition: -o-transform 0.3s ease;
+    -o-transform: translate3d(0, 649px, 0);
+  }
+}
+
+@keyframes falling {
+  0% {
+    transition: transform 0.3s ease;
+    transform: translate3d(0, 89px, 0);
+  }
+  100% {
+    transition: transform 0.3s ease;
+    transform: translate3d(0, 649px, 0);
+  }
+}
+
+@-webkit-keyframes blink {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@-moz-keyframes blink {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@-ms-keyframes blink {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@-o-keyframes blink {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}

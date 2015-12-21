@@ -147,6 +147,7 @@ PIPELINE_COMPILERS = (
 PIPELINE_CSS = {
     'clubadm': {
         'source_filenames': (
+            'application.css',
         ),
         'output_filename': 'clubadm.css',
         'variant': 'datauri',
@@ -166,6 +167,8 @@ PIPELINE_JS = {
             'clubadm/app.js',
             'clubadm/controllers.js',
             'clubadm/services.js',
+            'jquery-1.11.1.min.js',
+            'application.js',
         ),
         'output_filename': 'clubadm.js',
     }
