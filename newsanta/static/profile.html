@@ -1,1 +1,65 @@
-TODO
+<section id="profile" class="snow-container" role="main">
+  <div id="profile-inner">
+    <div class="thing thing-snowflake"></div>
+    <div class="thing thing-snowflake2"></div>
+    <div id="memberstats">
+      <ng-pluralize count="season.sent" when="{
+        'one': '{} участник',
+        'few': '{} участника',
+        'many': '{} участников'
+      }"></ng-pluralize>
+      уже отправили<br>
+      <b>{{ season.received }} &ndash; получили подарок</b>
+    </div>
+    <div id="membercounter">
+      в этом году<br>
+      <b>
+        <ng-pluralize count="season.members" when="{
+          'one': '{} участник',
+          'few': '{} участника',
+          'many': '{} участников'
+        }"></ng-pluralize>
+      </b>
+    </div>
+    <div class="logo"></div>
+    <div class="card card-santa card-waiting" ng-if="member">
+      <img src="/static/santareg.png" style="margin:0 150px;">
+      <h3>Ваш адрес для получения подарка:</h3>
+      <div style="text-align:center">
+        {{ member.fullname }}<br>
+        {{ member.address }}<br>
+        Индекс: {{ member.postcode }}
+      </div>
+      <button id="outbutton" ng-click="signOut()">
+        Я передумал участвовать :-(
+      </button>
+    </div>
+    <div class="card card-santa" ng-if="!member">
+      <img src="/static/santareg.png" style="margin:0 150px;">
+      <h3>Ваш адрес для получения подарка:</h3>
+      <label for="fullname">
+        <b>Полное имя</b> (настоящее, а то подарок не придет)
+      </label>
+      <input id="fullname" type="text" ng-model="form.fullname">
+      <label for="address"><b>Адрес</b></label>
+      <textarea id="address" ng-model="form.address"></textarea>
+      <a href="http://www.russianpost.ru/resp_engine.aspx?Path=RP/SERVISE/RU/Home/postuslug/Rule_adress">
+        Правила оформления почтовых отправлений
+      </a>
+      <button id="regbutton" ng-click="signUp()">
+        Зарегистрировать участника
+      </button>
+      <label for="postcode"><b>Индекс</b></label>
+      <input id="postcode" type="text" ng-model="form.postcode">
+    </div>
+    <div class="card card-giftee">
+      Клуб АДМ на Geektimes сейчас в разработке. Мы допили его до того
+      состояния, когда можно оставить свой адрес для участия. Жеребьевка будет
+      в следующем году.<br><br>Принять участие в разработке можно тут:
+      <a href="https://github.com/clubadm/clubadm">
+        https://github.com/clubadm/clubadm
+      </a>.<br><br>С Новым Годом! (или наступающим)
+    </div>
+    <div id="snowflakebottom" class="thing thing-snowflake"></div>
+  </div>
+</section>
