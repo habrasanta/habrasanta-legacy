@@ -1,0 +1,97 @@
+.shipping {
+  &-confirmation {
+    line-height: 41px;
+  }
+
+  &-button {
+    background: #b40000;
+    float: right;
+    font-size: 15px;
+    line-height: 21px;
+    margin-right: 14px;
+    transition: none;
+
+    &:after {
+      border-bottom: 19px solid transparent;
+      border-left: 1em solid #b40000;
+      border-top: 21px solid transparent;
+      content: "";
+      margin-left: 8px;
+      margin-top: -9px;
+      position: absolute;
+    }
+
+    &:hover {
+      background: #d30000;
+
+      &:after {
+        border-left: 1em solid #d30000;
+      }
+    }
+
+    &:active {
+      background: #990000;
+
+      &:after {
+        border-left: 1em solid #990000;
+      }
+    }
+  }
+}
+
+.receiving {
+  background: #3a9acc !important;
+  color: #fff !important;
+  text-align: center;
+  font-size: 15px;
+
+  img {
+    width: 146px;
+    height: 125px;
+    margin: 20px 0;
+  }
+
+  h3 {
+    font-weight: bold;
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  &-confirmation {
+    line-height: 41px;
+    text-align: left;
+    margin-top: 37px;
+  }
+
+  input[type=checkbox] + label {
+    background-image: url(../images/checkbox2.png);
+  }
+
+  &-button {
+    background: #f4f9ff;
+    color: #333;
+    float: right;
+    font-size: 15px;
+    line-height: 21px;
+    margin-right: 14px;
+    transition: none;
+
+    &:after {
+      border-bottom: 19px solid transparent;
+      border-left: 1em solid #f4f9ff;
+      border-top: 21px solid transparent;
+      content: "";
+      margin-left: 8px;
+      margin-top: -9px;
+      position: absolute;
+    }
+
+    &:hover {
+      background: #fff;
+
+      &:after {
+        border-left: 1em solid #fff;
+      }
+    }
+  }
+}

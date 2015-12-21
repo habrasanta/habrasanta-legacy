@@ -1,0 +1,7 @@
+recursive-include clubadm/templates *
+recursive-include newsanta/templates *
+recursive-include oldsanta/templates *
+
+recursive-include clubadm/static *
+recursive-include newsanta/static *
+recursive-include oldsanta/static *

@@ -1,0 +1,306 @@
+.card {
+  -webkit-perspective: 800px;
+  perspective: 800px;
+  width: 380px;
+
+  &-heading,
+  &-front,
+  &-back {
+    background: #fff;
+    color: #333;
+  }
+
+  &-heading {
+    background-clip: padding-box;
+    border-radius: 5px 5px 0px 0px;
+    font-size: 20px;
+    line-height: 60px;
+    text-align: center;
+  }
+
+  &-body {
+    height: 380px;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-transition: -webkit-transform 5s;
+    transition: transform 5s;
+    width: 380px;
+  }
+
+  &-front,
+  &-back {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15) inset;
+    height: 330px;
+    padding: 25px;
+    position: absolute;
+    width: 330px;
+  }
+
+  &-front {
+    z-index: 0;
+  }
+
+  &-back {
+    -ms-transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+  }
+
+  &-flipped &-body {
+    -ms-transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+  }
+
+  &-santa {
+    float: left;
+    margin-left: 80px;
+  }
+
+  &-giftee {
+    margin-left: 480px;
+  }
+
+  &-title {
+    margin: 0px 42px;
+  }
+
+  &-avatar {
+    border-radius: 5px;
+    height: 40px;
+    margin-right: 6px;
+    margin-top: -3px;
+    vertical-align: middle;
+    width: 40px;
+  }
+
+  &-banned {
+    a {
+      color: #337ab7;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    p {
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+  }
+
+  &-stamp {
+    background: url(../images/stamp.png);
+    color: #7f9eb1;
+    float: right;
+    font-size: 8px;
+    height: 15px;
+    margin-top: 7px;
+    padding-left: 126px;
+    padding-top: 41px;
+    width: 25px;
+  }
+
+  &-decorated {
+    background: #fff url(../images/decorated.png);
+  }
+
+  &-button {
+    background: #754787;
+    font-size: 15px;
+    width: 100%;
+
+    &:hover {
+      background: #945aab;
+    }
+
+    &:active {
+      background: #543360;
+    }
+  }
+
+  &-nothing-sent {
+    background: #3b9bcd;
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+
+    img {
+      display: block;
+      height: 138px;
+      margin: 65px auto 40px auto;
+      width: 138px;
+    }
+  }
+
+  input[type=checkbox] {
+    border: 0;
+    clip: rect(0 0 0 0); 
+    height: 1px; 
+    margin: -1px; 
+    overflow: hidden; 
+    padding: 0;
+    position: absolute; 
+    width: 1px; 
+  }
+
+  input[type=checkbox] + label {
+    background-image: url(../images/checkbox.png);
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    display: inline-block;
+    font-size:15px;
+    height: 17px;
+    line-height: 17px;
+    padding-left: 30px;
+    vertical-align: middle;
+  }
+
+  input[type=checkbox]:checked + label {
+    background-position: 0 -17px;
+  }
+
+  &-happy {
+    background: #6da900 !important;
+    color: #fff !important;
+    text-align: center;
+
+    h3 {
+      font-size: 26px;
+      margin-bottom: 260px;
+    }
+
+    a {
+      color: #fff;
+    }
+  }
+
+  &-closed {
+    color: #999;
+    padding: 13px 0;
+    text-align: center;
+  }
+
+  &-flipper {
+    background: transparent url(../images/chat.png);
+    border: none;
+    cursor: pointer;
+    float: right;
+    height: 17px;
+    margin-right: 25px;
+    margin-top: 23px;
+    width: 17px;
+
+    &::-moz-focus-inner {
+      padding: 0;
+      border: 0;
+    }
+
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  &-gift-sent {
+    background: #b40000 !important;
+    color: #fff !important;
+    font-size: 15px;
+    text-align: center;
+
+    img {
+      width: 146px;
+      height: 125px;
+      margin: 20px 0;
+    }
+
+    h3 {
+      font-weight: bold;
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+  }
+
+  &-gift-received {
+    background: url(../images/gift_received.jpg) !important;
+    color: #fff !important;
+    text-align: center;
+
+    h3 {
+      font-weight: bold;
+      font-size: 22px;
+    }
+  }
+
+  &-waiting {
+    font-size: 16px;
+    text-align: center;
+
+    h3 {
+      font-size: 21px;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    a {
+      color: #fff;
+    }
+  }
+
+  &-danger &-heading,
+  &-danger &-front/*,
+  &-danger &-back*/ {
+    background: #b40000;
+    color: #fff;
+  }
+}
+
+label,
+input[type='text'],
+textarea {
+  font: 16px/1.4 'PT Sans', Arial, sans-serif;
+  box-sizing: border-box;
+  resize: none;
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+input[type='text'],
+textarea {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 7px 7px;
+  margin: 5px 0;
+  width: 100%;
+}
+
+input[type='text'].ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border-color: #a94442;
+  color: #a94442;
+}
+
+label {
+  display: block;
+}
+
+#fullname {
+  margin-bottom: 15px;
+}
+
+#postcode {
+  width: 150px;
+}
+
+#address {
+  height: 120px;
+  margin-bottom: 15px;
+}

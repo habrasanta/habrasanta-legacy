@@ -1,0 +1,14 @@
+{% load staticfiles pipeline %}<!DOCTYPE html>
+<html ng-app="clubadm">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Sans:400,700&amp;subset=latin,cyrillic">
+    {% stylesheet "clubadm" %}
+    <script type="text/javascript">var jsdata={{jsdata|safe}}</script>
+    {% javascript "clubadm" %}
+  </head>
+  <body ng-class="$state.$current.data.classname" ui-view>
+  </body>
+</html>

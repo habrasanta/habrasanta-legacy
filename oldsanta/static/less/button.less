@@ -1,0 +1,33 @@
+.button {
+  border-radius: 5px;
+  border: none;
+  box-shadow: 0px -2px 0px rgba(0, 0, 0, 0.2) inset;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.3s;
+
+  &::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+
+  &-primary {
+    background: #349dcc;
+
+    &:hover {
+      background: #4ad2ff;
+    }
+
+    &:active {
+      background: #246e8f;
+    }
+  }
+}

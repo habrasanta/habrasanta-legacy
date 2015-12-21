@@ -1,0 +1,14 @@
+{% extends "rest_framework/base.html" %}
+
+{% block branding %}
+  <a class="navbar-brand" href="https://habra-adm.ru/">
+    Клуб анонимных Дедов Морозов на Хабрахабре
+  </a>
+{% endblock %}
+
+{% block userlinks %}
+  {% if user.is_authenticated %}
+    <li><img class="img-circle" src="{{ user.profile.avatar }}"></li>
+    <li class="navbar-text">{{ user.username }}</li>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,41 @@
+.chat {
+  &-view {
+    height: 273px;
+    margin-bottom: 15px;
+    overflow: auto;
+  }
+
+  &-message {
+    color: #898788;
+    font-size: 13px;
+    margin: 15px 60px 15px 0;
+
+    p {
+      background: #b40000;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 15px;
+      margin-bottom: 5px;
+      padding: 15px;
+      word-wrap: break-word;
+    }
+
+    &.is-author {
+      margin: 15px 0 15px 60px;
+
+      p {
+        background: #3b9bcd;
+      }
+    }
+  }
+
+  &-last-visit {
+    color: #898788;
+    text-align: center;
+  }
+
+  &-input {
+    background: url(../images/chat_input.png) 302px 9px no-repeat !important;
+    padding-right: 35px !important;
+  }
+}

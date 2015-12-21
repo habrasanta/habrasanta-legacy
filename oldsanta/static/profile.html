@@ -1,0 +1,382 @@
+<header class="header" role="banner">
+
+  <!--
+    Наш любимый логотип.
+  -->
+  <div class="logo header-logo">
+    <h1>АДМ {{ season.year }}</h1>
+    <h2>на хабре</h2>
+  </div>
+
+  <div class="header-inner">
+
+    <!--
+      Кнопки типа "Выйти" и т.д.
+
+      TODO(kafeman): Сделать help overlay, как хотел @novosylov.
+    -->
+    <ul class="usercontrols header-usercontrols">
+      <li class="usercontrols-item usercontrols-source">
+        <a href="https://github.com/clubadm/clubadm" title="Исходный код"></a>
+      </li>
+      <li class="usercontrols-item usercontrols-help">
+        <a href="https://ru.wikipedia.org/wiki/Тайный_Санта" title="Помощь"></a>
+      </li>
+      <li class="usercontrols-item usercontrols-logout">
+        <a href="/logout?next=%2F%23%2F{{ season.year }}" title="Выйти"></a>
+      </li>
+    </ul>
+
+    <!--
+      Счетчики этого сезона.
+
+      TODO(kafeman): Добавить полоски прогресса, как хотел @novosylov.
+    -->
+    <ul class="counters header-counters">
+      <li>
+        <b>{{ season.members }}</b>
+        <ng-pluralize count="season.members" when="{
+          'one': 'участник',
+          'few': 'участника',
+          'many': 'участников'
+        }"></ng-pluralize>
+      </li>
+      <li>
+        <b>{{ season.sent }}</b>
+        <ng-pluralize count="season.sent" when="{
+          'one': 'отправил',
+          'few': 'отправили',
+          'many': 'отправили'
+        }"></ng-pluralize>
+      </li>
+      <li>
+        <b>{{ season.received }}</b>
+        <ng-pluralize count="season.received" when="{
+          'one': 'получил',
+          'few': 'получили',
+          'many': 'получили'
+        }"></ng-pluralize>
+      </li>
+    </ul>
+
+    <!--
+      Важные даты этого сезона.
+
+      TODO(kafeman): Выделять текущий этап, как хотел @novosylov.
+    -->
+    <ul class="timetable header-timetable">
+      <li>
+        <b>{{ season.signups_start | date:'d MMMM' }}</b>
+        начало регистрации
+      </li>
+      <li>
+        <b>{{ season.signups_end | date:'d MMMM' }}</b>
+        жеребьевка адресов
+      </li>
+      <li>
+        <b>{{ season.ship_by | date:'d MMMM' }}</b>
+        последний срок отправки подарка
+      </li>
+    </ul>
+
+  </div>
+
+</header>
+
+<main class="content" role="main">
+
+  <!--
+    Карточка со всем, что имеет отношение к АДМ и самому пользователю.
+  -->
+  <div class="card card-santa" ng-init="flippers.santa=false" ng-class="{
+    'card-flipped': flippers.santa
+  }">
+
+    <header class="card-heading">
+      <button class="card-flipper" title="Показать/спрятать чатик"
+              ng-if="member.santa" ng-click="flippers.santa=!flippers.santa">
+      </button>
+      <h3 class="card-title">
+        <img class="card-avatar" src="{{ user.avatar }}"> {{ user.username }}
+      </h3>
+    </header>
+
+    <!--
+      Когда у пользователя есть назначенный АДМ.
+    -->
+    <div class="card-body" ng-if="member.santa">
+
+      <!--
+        Радостное поздравление на случай, когда все все отправили и получили.
+      -->
+      <div class="card-front card-happy"
+           ng-if="member.santa.is_gift_sent && member.is_gift_received">
+        <h3>С Новым Годом!</h3>
+        <p>
+          <a href="{{ season.gallery }}">Рассказать всем о подарке</a>
+        </p>
+      </div>
+
+      <!--
+        Форма подтверждения получения подарка.
+      -->
+      <div class="card-front receiving"
+           ng-if="member.santa.is_gift_sent && !member.is_gift_received">
+        <img src="/static/images/gift_sent2.png" alt="Подарок в пути">
+        <h3>Тебе отправили подарок</h3>
+        <p>
+          Наберись терпения и не&nbsp;забывай проверять почту, твой подарок уже
+          в&nbsp;пути.
+        </p>
+        <div class="receiving-confirmation" ng-if="!season.is_closed">
+          <button class="button receiving-button"
+                  ng-disabled="!gift_recevied" ng-click="receiveGift()">
+            Далее
+          </button>
+          <input type="checkbox" id="gift_recevied" ng-model="gift_recevied">
+          <label for="gift_recevied">Я получил подарок</label>
+        </div>
+      </div>
+
+      <!--
+        Заглушка на случай, если АДМ еще ничего не отправил.
+
+        FIXME(kafeman): И скорее всего ничего не отправит, если
+        season.is_closed == true.
+      -->
+      <div class="card-front card-nothing-sent"
+           ng-if="!member.santa.is_gift_sent">
+        <img src="/static/images/nothing_sent.png">
+        Тебе пока ничего<br>не отправили
+      </div>
+
+      <!--
+        Анонимный чат с АДМ.
+      -->
+      <div class="card-back chat" ng-if="member.santa">
+        <div class="chat-view" scroll-glue>
+          <div class="chat-message" ng-repeat="msg in chat.santa" ng-class="{
+            'is-author': msg.is_author
+          }">
+            <p>{{ msg.body }}</p>
+            <span ng-if="msg.is_author">Вы, </span>
+            <span ng-if="!msg.is_author">{{ member.santa.chat_name }}, </span>
+            <span am-time-ago="msg.sent"></span>
+          </div>
+          <!-- Товарищи кулхакеры, я знаю, что member.santa.last_visit отдается
+          всегда, просто я не хочу его показывать, потому что он портит вид. -->
+          <div class="chat-last-visit" ng-if="!season.is_closed">
+            {{ member.santa.chat_name }}
+            <span ng-if="member.santa.is_female">была</span>
+            <span ng-if="!member.santa.is_female">был</span>
+            тут <span am-time-ago="member.santa.last_visit"></span>
+          </div>
+        </div>
+        <div class="card-closed" ng-if="season.is_closed">
+          Чатик закрыт {{ season.ship_by | date:'d MMMM yyyy' }} г.
+        </div>
+        <form ng-if="!season.is_closed" ng-submit="sendMail('santa')">
+          <input class="chat-input" type="text" placeholder="Ваше сообщение..."
+                 autocomplete="off" ng-model="chat.santa_message">
+        </form>
+      </div>
+    </div>
+
+    <!--
+      Когда у пользователя нет назначенного АДМ.
+    -->
+    <div class="card-body" ng-if="!member.santa">
+
+      <!--
+        Форма для регистрации на сезон.
+      -->
+      <div class="card-front card-address" ng-if="user.is_active" ng-class="{
+        'card-decorated': member
+      }">
+        <form novalidate>
+          <label for="fullname">Кому</label>
+          <input id="fullname" type="text" placeholder="Полное имя" required
+                 ng-model="form.fullname">
+          <div class="card-stamp">{{ season.year }}</div>
+          <label for="postcode">Куда</label>
+          <input id="postcode" type="text" placeholder="Индекс" required
+                 ng-model="form.postcode">
+          <textarea id="address" placeholder="Адрес" required
+                    ng-model="form.address"></textarea>
+        </form>
+        <button class="button button-primary card-button"
+                ng-if="member && season.is_participatable"
+                ng-click="signOut()">
+          Я передумал участвовать
+        </button>
+        <button class="button button-primary card-button"
+                ng-if="!member && user.can_participate && season.is_participatable"
+                ng-click="signUp()">
+          Зарегистрировать участника
+        </button>
+        <div ng-if="!member && !user.can_participate && season.is_participatable"
+             class="card-closed">
+          Вы не можете участвовать в АДМ-{{ season.year }}.
+        </div>
+        <div class="card-closed" ng-if="!member && !season.is_participatable">
+          Регистрация закрыта {{ season.signups_end | date:'d MMMM yyyy' }} г.
+        </div>
+      </div>
+
+      <!--
+        Заглушка для забаненых пользователей. По политике @negasus мы баним всех
+        подряд, поэтому важно быть сдержанным в этом тексте. Бывали случаи,
+        когда забанеными оказывались совершенно нормальные люди.
+
+        FIXME(kafeman): Почему в прошлом? А если в позапрошлом?
+      -->
+      <div class="card-front card-banned" ng-if="!user.is_active">
+        <p>
+          Привет, {{ user.username }}. В&nbsp;прошлом году твой получатель
+          не&nbsp;нажал кнопку подтверждения получения подарка. Скорее всего, он
+          просто забыл об&nbsp;этом, но нам хотелось&nbsp;бы это выяснить.
+          Напиши, пожалуйста, в&nbsp;ЛС хабрапользователю
+          <a href="http://habrahabr.ru/users/negasus/">@negasus</a> о&nbsp;том,
+          что ты сейчас прочитал, и&nbsp;мы попробуем вместе разобраться. После
+          этого ты сможешь заполнить свои данные и&nbsp;участвовать
+          в&nbsp;ХабраАДМ.
+        </p>
+        <p>
+          Извини, что так все сложно, но&nbsp;нам хочется, чтобы все было хорошо
+          и&nbsp;правильно.
+        </p>
+        <p>
+          С&nbsp;наступающим!
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!--
+    Карточка со всем, что имеет отношение к АПП.
+  -->
+  <div class="card card-giftee" ng-init="flippers.giftee=false" ng-class="{
+    'card-danger': !member.giftee,
+    'card-flipped': flippers.giftee
+  }">
+
+    <header class="card-heading">
+      <button class="card-flipper" title="Показать/спрятать чатик"
+              ng-if="member.giftee" ng-click="flippers.giftee=!flippers.giftee">
+      </button>
+      <h3 class="card-title">Твой получатель</h3>
+    </header>
+
+    <div class="card-body">
+
+      <!--
+        До тех пор, пока АПП не назначен, отображается эта заглушка.
+      -->
+      <div class="card-front card-waiting" ng-if="!member.giftee">
+        <img src="/static/images/anonymous.png" alt="Аноним">
+        <h3 ng-if="season.timeleft">
+          <ng-pluralize count="season.timeleft" when="{
+            'one': 'Один день',
+            'few': '{} дня',
+            'many': '{} дней'
+          }"></ng-pluralize> до старта
+        </h3>
+        <p ng-if="season.timeleft">
+          {{ season.signups_end | date:'d MMMM' }} будет проведена жеребьевка
+          адресов, где каждому участнику будет назначен свой получатель.
+        </p>
+        <h3 ng-if="!season.timeleft">
+          Адреса уже розданы
+        </h3>
+        <p ng-if="!season.timeleft">
+          Подписывайся на обновления
+          <a href="http://habrahabr.ru/users/habraadm/">@habraadm</a>, чтобы
+          не&nbsp;пропустить регистрацию на&nbsp;следующий год.
+        </p>
+      </div>
+
+      <!--
+        Поздравление с тем, что подарок дошел.
+      -->
+      <div class="card-front card-gift-received"
+           ng-if="member.giftee && member.giftee.is_gift_received">
+        <h3>Подарок получен</h3>
+      </div>
+
+      <!--
+        Ожидание, когда АПП получит подарок.
+      -->
+      <div class="card-front card-gift-sent"
+           ng-if="member.giftee && member.is_gift_sent && !member.giftee.is_gift_received">
+        <img src="/static/images/gift_sent.png" alt="Подарок в пути">
+        <h3>Ты отправил подарок</h3>
+        <p>
+          Осталось дождаться пока получатель подтвердит получение подарка.
+        </p>
+      </div>
+
+      <!--
+        Адрес, на который нужно выслать подарок.
+      -->
+      <div class="card-front card-decorated shipping"
+           ng-if="member.giftee && !member.is_gift_sent">
+        <label for="fullname">Кому</label>
+        <input id="fullname" type="text" readonly
+               ng-model="member.giftee.fullname">
+        <div class="card-stamp">{{ season.year }}</div>
+        <label for="postcode">Куда</label>
+        <input id="postcode" type="text" readonly
+               ng-model="member.giftee.postcode">
+        <textarea id="address" readonly
+                  ng-model="member.giftee.address"></textarea>
+        <div class="card-closed" ng-if="season.is_closed">
+          Вы так и не отправили подарок вовремя :-(
+        </div>
+        <div class="shipping-confirmation" ng-if="!season.is_closed">
+          <button class="button shipping-button"
+                  ng-disabled="!gift_sent" ng-click="sendGift()">
+            Далее
+          </button>
+          <input type="checkbox" id="gift_sent" ng-model="gift_sent">
+          <label for="gift_sent">Я отправил подарок</label>
+        </div>
+      </div>
+
+      <!--
+        Анонимный чат с АПП.
+      -->
+      <div class="card-back chat" ng-if="member.giftee">
+        <div class="chat-view" scroll-glue>
+          <div class="chat-message" ng-repeat="msg in chat.giftee" ng-class="{
+            'is-author': msg.is_author
+          }">
+            <p>{{ msg.body }}</p>
+            <span ng-if="msg.is_author">Вы, </span>
+            <span ng-if="!msg.is_author">{{ member.giftee.chat_name }}, </span>
+            <span am-time-ago="msg.sent"></span>
+          </div>
+          <!-- Товарищи кулхакеры, я знаю, что member.giftee.last_visit отдается
+          всегда, просто я не хочу его показывать, потому что он портит вид. -->
+          <div class="chat-last-visit" ng-if="!season.is_closed">
+            {{ member.giftee.chat_name }}
+            <span ng-if="member.giftee.is_female">была</span>
+            <span ng-if="!member.giftee.is_female">был</span>
+            тут <span am-time-ago="member.giftee.last_visit"></span>
+          </div>
+        </div>
+        <div class="card-closed" ng-if="season.is_closed">
+          Чатик закрыт {{ season.ship_by | date:'d MMMM yyyy' }} г.
+        </div>
+        <form ng-if="!season.is_closed" ng-submit="sendMail('giftee')">
+          <input class="chat-input" type="text" placeholder="Ваше сообщение..."
+                 autocomplete="off" ng-model="chat.giftee_message">
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+</main>

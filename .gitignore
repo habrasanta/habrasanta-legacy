@@ -1,0 +1,10 @@
+*.py[co]
+.DS_Store
+__pycache__
+bower_components/
+clubadm.egg-info/
+dist/
+newsanta-static/
+newsanta.sqlite3
+oldsanta-static/
+oldsanta.sqlite3
