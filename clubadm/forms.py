@@ -27,7 +27,7 @@ class UserForm(UserChangeForm):
 
         if is_active == False and self.instance.is_active == True:
             self.instance.profile.send_notification('Ваш аккаунт заблокирован',
-                'Для выяснения причин свяжитесь с пользователем @habraadm.')
+                'Для выяснения причин свяжитесь с пользователем @clubadm.')
 
         if is_active == True and self.instance.is_active == False:
             self.instance.profile.send_notification('Ваш аккаунт разблокирован',
