@@ -105,11 +105,11 @@
        * Записаться в участники.
        */
       $scope.signUp = function() {
-        console.log($scope.form);
-        console.log($scope);
         SeasonService.signUp($scope.season.year, $scope.form).then(function(response) {
           $scope.member = response.data;
           $scope.season.members++;
+        }, function(response) {
+          alert(response.data);
         });
       };
 
