@@ -7,3 +7,17 @@
 
 Проект по-прежнему находится в стадии активной разработки. Многое будет доделано
 и переделано.
+
+```bash
+$ git clone https://github.com/clubadm/faketimes.git
+$ cd faketimes
+$ python3 faketimes.py
+```
+
+```bash
+$ git clone https://github.com/clubadm/clubadm.git
+$ cd clubadm
+$ bower install
+$ python3 manage.py migrate
+$ python3 manage.py runserver
+```
