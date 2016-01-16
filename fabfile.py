@@ -4,6 +4,7 @@ from fabric.contrib.project import rsync_project
 
 env.user = 'root'
 env.hosts = ['habra-adm.ru']
+env.use_ssh_config = True
 
 
 def pack():
