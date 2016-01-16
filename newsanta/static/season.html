@@ -1,16 +1,19 @@
 <div id="timetable" class="timetable">
   <div class="timetable-inner">
-    <div class="timetable-phase">
+    <div class="timetable-phase" itemscope itemtype="http://schema.org/Event">
+      <meta itemprop="startDate" content="{{ season.signups_start }}">
       <time>{{ season.signups_start | date:'d MMMM' }}</time>
-      <p>Начало регистрации</p>
+      <p itemprop="name">Начало регистрации</p>
     </div>
-    <div class="timetable-phase">
+    <div class="timetable-phase" itemscope itemtype="http://schema.org/Event">
+      <meta itemprop="startDate" content="{{ season.signups_end }}">
       <time>{{ season.signups_end | date:'d MMMM' }}</time>
-      <p>Жеребьевка адресов</p>
+      <p itemprop="name">Жеребьевка адресов</p>
     </div>
-    <div class="timetable-phase">
+    <div class="timetable-phase" itemscope itemtype="http://schema.org/Event">
+      <meta itemprop="startDate" content="{{ season.ship_by }}">
       <time>{{ season.ship_by | date:'d MMMM' }}</time>
-      <p>Окончание сезона</p>
+      <p itemprop="name">Окончание сезона</p>
     </div>
     <div class="timetable-account" ng-if="user">
       <img class="avatar" src="{{ user.avatar }}">
