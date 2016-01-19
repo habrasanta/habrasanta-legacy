@@ -138,40 +138,39 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
 
-PIPELINE_DISABLE_WRAPPER = True
-
-PIPELINE_COMPILERS = (
-  'pipeline.compilers.less.LessCompiler',
-)
-
-PIPELINE_CSS = {
-    'clubadm': {
-        'source_filenames': (
-            'application.css',
-        ),
-        'output_filename': 'clubadm.css',
-        'variant': 'datauri',
+PIPELINE = {
+    'STYLESHEETS': {
+        'clubadm': {
+            'source_filenames': (
+                'application.css',
+            ),
+            'output_filename': 'clubadm.css',
+            'variant': 'datauri',
+        },
     },
-}
-
-PIPELINE_JS = {
-    'clubadm': {
-        'source_filenames': (
-            'angular/angular.min.js',
-            'angular-i18n/angular-locale_ru-ru.js',
-            'angular-ui-router/release/angular-ui-router.min.js',
-            'moment/min/moment.min.js',
-            'moment/locale/ru.js',
-            'angular-moment/angular-moment.min.js',
-            'angular-scroll-glue/src/scrollglue.js',
-            'clubadm/app.js',
-            'clubadm/controllers.js',
-            'clubadm/services.js',
-            'jquery-1.11.1.min.js',
-            'application.js',
-        ),
-        'output_filename': 'clubadm.js',
-    }
+    'JAVASCRIPT': {
+        'clubadm': {
+            'source_filenames': (
+                'angular/angular.min.js',
+                'angular-i18n/angular-locale_ru-ru.js',
+                'angular-ui-router/release/angular-ui-router.min.js',
+                'moment/min/moment.min.js',
+                'moment/locale/ru.js',
+                'angular-moment/angular-moment.min.js',
+                'angular-scroll-glue/src/scrollglue.js',
+                'clubadm/app.js',
+                'clubadm/controllers.js',
+                'clubadm/services.js',
+                'jquery-1.11.1.min.js',
+                'application.js',
+            ),
+            'output_filename': 'clubadm.js',
+        },
+    },
+    'COMPILERS': (
+      'pipeline.compilers.less.LessCompiler',
+    ),
+    'DISABLE_WRAPPER': True,
 }
 
 

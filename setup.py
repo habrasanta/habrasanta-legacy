@@ -11,7 +11,7 @@ setup(
         'Django==1.9.1',
         'Celery==3.1.19',
         'djangorestframework==3.3.2',
-        'django-pipeline==1.5.4',
+        'django-pipeline==1.6.4',
         'django-debug-toolbar==1.4',
         'pylibmc',
         'psycopg2',
