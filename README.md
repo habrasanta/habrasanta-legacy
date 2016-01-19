@@ -1,6 +1,8 @@
 Клуб АДМ на Хабрахабре и Geektimes
 ==================================
 
+[![Build Status](https://travis-ci.org/clubadm/clubadm.svg?branch=master)](https://travis-ci.org/clubadm/clubadm)
+
 Данный репозиторий содержит исходные коды сайтов
 [Клуба АДМ на Хабрахабре](https://habra-adm.ru/) (кодовое имя `oldsanta`) и
 [Клуба АДМ на Geektimes](https://geekadm.ru/) (кодовое имя `newsanta`).
