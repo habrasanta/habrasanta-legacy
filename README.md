@@ -2,6 +2,7 @@
 ==================================
 
 [![Build Status](https://travis-ci.org/clubadm/clubadm.svg?branch=master)](https://travis-ci.org/clubadm/clubadm)
+[![Dependency Status](https://www.versioneye.com/user/projects/569eb6902025a6002e0002c5/badge.svg?style=flat)](https://www.versioneye.com/user/projects/569eb6902025a6002e0002c5)
 
 Данный репозиторий содержит исходные коды сайтов
 [Клуба АДМ на Хабрахабре](https://habra-adm.ru/) (кодовое имя `oldsanta`) и
