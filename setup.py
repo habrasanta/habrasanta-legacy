@@ -8,7 +8,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Django==1.9',
+        'Django==1.9.1',
         'Celery==3.1.19',
         'djangorestframework==3.3.2',
         'django-pipeline==1.5.4',
