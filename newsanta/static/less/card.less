@@ -1,0 +1,114 @@
+@import "variables.less";
+
+.card {
+
+  background: rgba(255, 255, 255, 0.5);
+  height: @card-height;
+  overflow: hidden;
+  width: (12 / 2) * @column-width + (12 / 2 - 1) * 2 * @column-padding;
+
+  @card-data-height: @card-height - @card-splitter-height;
+
+  &-data {
+    background: #fff;
+    height: @card-data-height - 2 * 35px;
+    overflow: hidden;
+    padding: 35px;
+    text-align: center;
+    transition: margin-top 1s ease-out;
+  }
+
+  &-open &-data {
+    margin-top: -@card-data-height;
+  }
+
+  &-splitter {
+
+    color: #558ea1;
+    height: @card-splitter-height - 2 * 25px;
+    padding: 25px;
+    text-align: center;
+
+    span {
+
+      border-bottom: 1px dashed;
+      color: #298dbb;
+      cursor: pointer;
+      font: 23px @font-family-narrow;
+      text-transform: uppercase;
+
+      &:hover {
+        color: #22cfb2;
+      }
+
+    }
+
+    p {
+      margin-top: 15px;
+    }
+
+  }
+
+  &-chat {
+    border-top: 1px solid rgba(85, 142, 161, 0.2);
+    height: @card-height - @card-splitter-height;
+  }
+
+  &-content {
+
+    height: 105px;
+    margin-bottom: 30px;
+    overflow: auto;
+    padding: 0 30px;
+    text-align: center;
+
+    h5,
+    p {
+      margin-bottom: 0.8em;
+    }
+
+    h5 {
+      font-size: 14px;
+    }
+
+  }
+
+  &-form {
+
+    padding: 35px;
+
+    img {
+      display: block;
+      height: 114px;
+      margin: 0 auto;
+      width: 107px;
+    }
+
+    .button {
+      float: right;
+      width: 250px;
+      margin-top: 35px;
+      padding: 12px 0;
+    }
+
+  }
+
+  &-stub {
+    background: #fff;
+    height: @card-height - 2 * 35px;
+    padding: 35px;
+    text-align: center;
+  }
+
+  h4 {
+    font: 20px @font-family-narrow;
+    margin: 30px 0;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+}
+
+#postcode {
+  width: 100px;
+}

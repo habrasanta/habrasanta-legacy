@@ -1,0 +1,65 @@
+@import "variables.less";
+
+@profile-height: @header-height + 2 * @logo-padding + @logo-height + @card-height + 50px;
+
+.profile {
+
+  &-inner {
+    background: #aab1cd;
+    height: @profile-height;
+  }
+
+  &-logo,
+  &-stats,
+  &-santa,
+  &-giftee {
+    left: 50%;
+    position: absolute;
+    z-index: 999;
+  }
+
+  &-logo {
+    margin-left: -@logo-width / 2;
+    top: @header-height + @logo-padding;
+  }
+
+  &-stats {
+
+    font: 20px @font-family-narrow;
+    margin-left: -@page-width / 2;
+    padding-top: (@logo-height - (2 + @page-line-height) * 20px) / 2;
+    text-transform: uppercase;
+    top: @header-height + @logo-padding;
+    width: @page-width / 2 - @logo-width / 2;
+
+    strong {
+      font-weight: bold;
+    }
+
+  }
+
+  &-members {
+    margin-left: @logo-width / 2;
+    text-align: right;
+  }
+
+  @card-top: @header-height + 2 * @logo-padding + @logo-height;
+
+  &-santa {
+    margin-left: -@page-width / 2;
+    top: @card-top;
+  }
+
+  &-giftee {
+    margin-left: @column-padding;
+    top: @card-top;
+  }
+
+}
+
+#profile-snow {
+  height: @profile-height;
+  position: absolute;
+  top: @header-height;
+  width: 100%;
+}

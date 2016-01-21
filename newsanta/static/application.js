@@ -1,76 +1,41 @@
 $(function() {
+  setTimeout(function() {
+    var blur = [];
+    var canvas = document.getElementById('profile-snow');
 
-  for (var i = 0; i < 100; i++) {
-    setTimeout(makeSnowflake, Math.random() * 10 * 1000);
-  }
-
-  function makeSnowflake() {
-    var r = Math.random() * 10;
-    var x = Math.round(Math.random() * $(document).width());
-    var speed = Math.round(Math.random() * 20) + 10 + 's';
-    var snowflake = $('<div></div>').addClass('snowflake');
-
-    snowflake.css({
-      width: r + 'px',
-      height: r + 'px',
-      right: x + 'px',
-      webkitAnimationDuration: speed,
-      mozAnimationDuration: speed,
-      animationDuration: speed
-    });
-
-    $('.snow-container').prepend(snowflake);
-
-    snowflake.on('animationend webkitAnimationEnd oanimationend msAnimationEnd', function() {
-      $(this).remove();
-      makeSnowflake();
-    });
-  }
-
-  var scrolled = false;
-  var lastScrollTop = 0;
-
-  $(window).scroll(function() {
-    scrolled = true;
-  });
-
-  setInterval(function() {
-    if (scrolled) {
-      handleScroll();
-      scrolled = false;
-    }
-  }, 250);
-
-  function handleScroll() {
-    var st = $(this).scrollTop();
-
-    // Make sure they scroll more than delta
-    if (Math.abs(lastScrollTop - st) <= 5) {
-      return;
-    }
-
-    // If they scrolled down and are past the navbar, add class .nav-up.
-    // This is necessary so you never see what is "behind" the navbar.
-    if (st > lastScrollTop && st > 89) {
-      // Scroll Down
-      $('.timetable').addClass('nav-up');
+    if (!canvas) {
+      canvas = document.getElementById('welcome-snow');
+      canvas.height = 560;
     } else {
-      // Scroll Up
-      if (st + $(window).height() < $(document).height()) {
-        $('.timetable').removeClass('nav-up');
-      }
+      canvas.height = 887;
+      blur = [
+        {
+          x: window.innerWidth / 2 - 470,
+          y: 203,
+          width: 460,
+          height: 545
+        },
+        {
+          x: window.innerWidth / 2 + 10,
+          y: 203,
+          width: 460,
+          height: 545
+        }
+      ];
     }
 
-    lastScrollTop = st;
-  }
+    canvas.width = window.innerWidth;
 
-  var cloud = $('<div class="cloud"></div>');
-  cloud.text($('.banner-welcome h2 abbr').attr('title'));
-  $('.banner-welcome h2 abbr').attr('title', '');
-  $('.banner-welcome').append(cloud);
-  $('.banner-welcome h2 abbr').hover(function() {
-    cloud.fadeIn('slow');
-  }, function() {
-    cloud.fadeOut('slow');
-  });
+    var backend = new newsanta.CanvasBackend({
+      element: canvas,
+      blur: blur
+    });
+
+    var engine = new snowmachine.SimpleEngine({
+      backend: backend,
+      count: 150
+    });
+
+    engine.start();
+  }, 2000);
 });

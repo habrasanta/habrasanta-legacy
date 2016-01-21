@@ -1,0 +1,30 @@
+@import "variables.less";
+
+.button {
+
+  background: #aab1cd;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  font: 13px @font-family-caption;
+  padding: 10px 20px;
+  text-transform: uppercase;
+
+  &::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:hover {
+    background: lighten(#aab1cd, 5%);
+  }
+
+  &:active {
+    background: darken(#aab1cd, 5%);
+  }
+
+}

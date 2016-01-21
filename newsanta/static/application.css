@@ -1,73 +1,3 @@
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-  border: 0;
-  font: inherit;
-  font-size: 100%;
-  margin: 0;
-  padding: 0;
-  vertical-align: baseline;
-}
-
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
-footer, header, hgroup, menu, nav, section {
-  display: block;
-}
-
-body {
-  line-height: 1;
-}
-
-ol, ul {
-  list-style: none;
-}
-
-blockquote, q {
-  quotes: none;
-}
-
-blockquote:before, blockquote:after,
-q:before, q:after {
-  content: '';
-  content: none;
-}
-
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-body {
-  background: #fff;
-  border-top: 89px solid #aab1cd;
-  color: #496063;
-  font: 13px/1.3 'PT Sans Caption', Arial, sans-serif;
-}
-
-a {
-  color: #298dbb;
-}
-
-a:hover {
-  color: #22cfb2;
-}
-
-abbr {
-  border-bottom: 1px dashed;
-  cursor: help;
-}
-
 .btn {
   color: #fff !important;
   display: inline-block;
@@ -82,61 +12,6 @@ abbr {
   font-weight: bold;
   padding-left: 35px;
   width: 185px;
-}
-
-.timetable {
-  background: #fff;
-  height: 89px;
-  position: fixed;
-  top: 0;
-  transition: top 0.2s ease-in-out;
-  width: 100%;
-  z-index: 1000;
-}
-
-.timetable.nav-up {
-  top: -89px;
-}
-
-.timetable-inner {
-  margin: 0 auto;
-  padding: 27px 10px;
-  width: 940px;
-}
-
-.timetable-phase {
-  float: left;
-  margin-right: 20px;
-  width: 140px;
-}
-
-.timetable-phase time {
-  font-weight: bold;
-}
-
-.timetable-phase p {
-  margin-top: 1px;
-}
-
-.timetable-account {
-  float: right;
-  line-height: 35px;
-}
-
-.timetable-account .username {
-  font-weight: bold;
-  color: #558ea1;
-}
-
-.timetable-account .logout {
-  margin-left: 30px;
-}
-
-.timetable-account .avatar {
-  height: 35px;
-  margin-right: 10px;
-  vertical-align: middle;
-  width: 35px;
 }
 
 .snow-container {
@@ -447,112 +322,6 @@ abbr {
   margin-left: 412px;
 }
 
-#profile {
-  height: 900px;
-}
-
-#profile .logo {
-  position: absolute;
-  margin-top: -140px;
-  margin-left: 377px;
-}
-
-#profile-inner {
-  margin: 0 auto;
-  padding: 170px 10px;
-  width: 940px;
-}
-
-#profile-inner .thing {
-  position: absolute;
-}
-
-#profile-inner .thing-snowflake {
-  margin-top: -220px;
-  margin-left: 150px;
-}
-
-#profile-inner .thing-snowflake2 {
-  margin-top: -200px;
-  margin-left: 700px;
-}
-
-#memberstats {
-  font: 17px 'PT Sans Narrow';
-  position: absolute;
-  margin-top: -100px;
-  margin-left: 0;
-  text-transform: uppercase;
-}
-
-#memberstats b {
-  font-weight: bold;
-}
-
-#membercounter {
-  font: 17px 'PT Sans Narrow';
-  position: absolute;
-  margin-top: -100px;
-  margin-left: 830px;
-  text-transform: uppercase;
-}
-
-#membercounter b {
-  font-weight: bold;
-}
-
-#snowflakebottom {
-  margin-top: 35px !important;
-  margin-left: 415px !important;
-}
-
-.card {
-  background: #e2e3e8;
-  padding: 30px;
-  height: 485px;
-  width: 395px;
-}
-
-.card-santa {
-  float: left;
-}
-
-.card-santa h3 {
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 17px;
-  margin: 35px 0;
-}
-
-.card-waiting {
-  background: #fff;
-}
-
-.card-giftee {
-  margin-left: 493px;
-}
-
-.footer-inner {
-  margin: 0 auto;
-  padding: 27px 10px;
-  width: 940px;
-}
-
-#postcode {
-  width: 100px;
-}
-
-#regbutton {
-  float: right;
-  width: 250px;
-  margin-top: 35px;
-  background: #aab1cd;
-  border: 0;
-  color: #fff;
-  text-transform: uppercase;
-  padding: 12px 0;
-}
-
 #outbutton {
   display: block;
   margin: 0 auto;
@@ -578,6 +347,12 @@ textarea {
   margin: 5px 0px;
 }
 
+input[type='text'].ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  background: #a94442;
+  color: #fff;
+}
+
 label {
   display: block;
   margin-top: 15px;
@@ -585,58 +360,6 @@ label {
 
 label b {
   font-weight: bold;
-}
-
-.footer-designer {
-  float: right;
-}
-
-.footer-feedback {
-  width: 220px;
-}
-
-@-webkit-keyframes falling {
-  0% {
-    -webkit-transition: -webkit-transform 0.3s ease;
-    -webkit-transform: translate3d(0, 89px, 0);
-  }
-  100% {
-    -webkit-transition: -webkit-transform 0.3s ease;
-    -webkit-transform: translate3d(0, 649px, 0);
-  }
-}
-
-@-moz-keyframes falling {
-  0% {
-    -moz-transition: -moz-transform 0.3s ease;
-    -moz-transform: translate3d(0, 89px, 0);
-  }
-  100% {
-    -moz-transition: -moz-transform 0.3s ease;
-    -moz-transform: translate3d(0, 649px, 0);
-  }
-}
-
-@-o-keyframes falling {
-  0% {
-    -o-transition: -o-transform 0.3s ease;
-    -o-transform: translate3d(0, 89px, 0);
-  }
-  100% {
-    -o-transition: -o-transform 0.3s ease;
-    -o-transform: translate3d(0, 649px, 0);
-  }
-}
-
-@keyframes falling {
-  0% {
-    transition: transform 0.3s ease;
-    transform: translate3d(0, 89px, 0);
-  }
-  100% {
-    transition: transform 0.3s ease;
-    transform: translate3d(0, 649px, 0);
-  }
 }
 
 @-webkit-keyframes blink {
@@ -697,4 +420,12 @@ label b {
   100% {
     opacity: 0.4;
   }
+}
+
+#welcome-snow {
+  background: #aab1cd;
+  height: 560px;
+  position: absolute;
+  top: 89px;
+  width: 100%;
 }

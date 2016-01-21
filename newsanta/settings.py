@@ -142,7 +142,14 @@ PIPELINE = {
     'STYLESHEETS': {
         'clubadm': {
             'source_filenames': (
+                'reset-css/reset.less',
+                'less/scaffolding.less',
                 'application.css',
+                'less/button.less',
+                'less/card.less',
+                'less/footer.less',
+                'less/header.less',
+                'less/profile.less',
             ),
             'output_filename': 'clubadm.css',
             'variant': 'datauri',
@@ -161,6 +168,9 @@ PIPELINE = {
                 'clubadm/app.js',
                 'clubadm/controllers.js',
                 'clubadm/services.js',
+                'snowmachine/build/snowmachine.min.js',
+                'js/StackBlur.js',
+                'js/backend.js',
                 'jquery-1.11.1.min.js',
                 'application.js',
             ),
