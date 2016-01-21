@@ -78,6 +78,8 @@
         }
         SeasonService.sendMail(year, message, receptient).then(function(response) {
           $scope.chat = response.data;
+        }, function(response) {
+          alert(response.data);
         });
       };
 
@@ -88,6 +90,8 @@
         SeasonService.sendGift($scope.season.year).then(function(response) {
           $scope.member = response.data;
           $scope.season.sent++;
+        }, function(response) {
+          alert(response.data);
         });
       };
 
@@ -98,6 +102,8 @@
         SeasonService.receiveGift($scope.season.year).then(function(response) {
           $scope.member = response.data;
           $scope.season.received++;
+        }, function(response) {
+          alert(response.data);
         });
       };
 
@@ -120,6 +126,8 @@
         SeasonService.signOut($scope.season.year).then(function() {
           $scope.member = null;
           $scope.season.members--;
+        }, function(response) {
+          alert(response.data);
         });
       };
     }]);
