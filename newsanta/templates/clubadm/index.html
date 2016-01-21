@@ -1,8 +1,11 @@
 {% extends "clubadm/base.html" %}
 
+{% load staticfiles %}
+
 {% block title %}Клуб анонимных Дедов Морозов на Geektimes{% endblock %}
 
 {% block extra %}
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Sans+Caption:400,700&subset=latin,cyrillic">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700&subset=latin,cyrillic">
+  <script src="{% static 'js/StackBlur.js' %}"></script>
 {% endblock %}
