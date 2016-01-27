@@ -16,5 +16,6 @@ setup(
         'pylibmc',
         'psycopg2',
         'jinja2',
+        'requests',
     ]
 )
