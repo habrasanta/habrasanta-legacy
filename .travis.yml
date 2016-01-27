@@ -5,7 +5,7 @@ python:
   - "3.5"
 
 before_script:
-  - "npm install -g bower"
+  - "npm install -g less bower"
   - "bower install"
   - "python manage.py collectstatic --noinput --settings=oldsanta.settings"
   - "python manage.py collectstatic --noinput --settings=newsanta.settings"
