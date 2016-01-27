@@ -1,1 +1,1 @@
-from oldsanta.celery import app as celery_app
+from newsanta.celery import app as celery_app
