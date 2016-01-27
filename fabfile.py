@@ -36,4 +36,4 @@ def deploy():
     run('uwsgi --reload /var/run/newsanta.pid')
     put('nginx.conf', '/etc/nginx/sites-enabled/clubadm.conf')
     run('service nginx restart')
-    run('service celeryd restart')
+    run('service supervisor restart')
