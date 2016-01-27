@@ -9,8 +9,8 @@ python:
 before_script:
   - "npm install -g bower"
   - "bower install"
-  - "python manage.py collectstatic --settings=oldsanta.settings"
-  - "python manage.py collectstatic --settings=newsanta.settings"
+  - "python manage.py collectstatic --noinput --settings=oldsanta.settings"
+  - "python manage.py collectstatic --noinput --settings=newsanta.settings"
 
 install: "python setup.py install"
 
