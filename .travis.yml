@@ -12,4 +12,6 @@ before_script:
 
 install: "python setup.py install"
 
-script: "nosetests"
+script:
+  - "python manage.py test --settings=oldsanta.settings"
+  - "python manage.py test --settings=newsanta.settings"
