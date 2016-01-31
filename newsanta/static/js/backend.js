@@ -16,7 +16,7 @@ newsanta.CanvasBackend.prototype.render = function(snowflakes) {
   snowmachine.CanvasBackend.prototype.render.call(this, snowflakes);
 
   this.blur.forEach(function(region) {
-    stackBlurCanvasRGBA(canvas, region.x, region.y, region.width,
-                        region.height, newsanta.BLUR_RADIUS);
+    //stackBlurCanvasRGBA(canvas, region.x, region.y, region.width,
+    //                    region.height, newsanta.BLUR_RADIUS);
   });
 };
