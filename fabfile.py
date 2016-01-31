@@ -2,8 +2,7 @@ from fabric.api import *
 from fabric.contrib.project import rsync_project
 
 
-env.user = 'root'
-env.hosts = ['habra-adm.ru']
+env.hosts = ['kafeserver-1']
 env.use_ssh_config = True
 
 
