@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
+from django.core import urlresolvers
 from django.core.cache import cache
 
 from clubadm.forms import SeasonForm, UserForm
@@ -87,7 +88,7 @@ class UserAdmin(UserAdmin):
 
 class MemberAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('user', 'season', 'giftee')}),
+        (None, {'fields': ('user', 'season', 'giftee_link', 'santa_link')}),
         ('Почтовый адрес', {
             'fields': ('fullname', 'postcode', 'address')
         }),
@@ -97,6 +98,7 @@ class MemberAdmin(admin.ModelAdmin):
     )
     list_display = ('fullname', 'season', 'is_gift_sent', 'is_gift_received')
     list_filter = ('season',)
+    readonly_fields = ('giftee_link', 'santa_link')
     search_fields = ('fullname',)
 
     def get_readonly_fields(self, request, obj=None):
@@ -106,6 +108,34 @@ class MemberAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return obj is not None and obj.giftee is None
+
+    def giftee_link(self, obj):
+        return '<a href="%s">%s</a> (<a href="%s">%s</a>)' % (
+            urlresolvers.reverse('admin:clubadm_member_change', args=[
+                obj.giftee.id
+            ]),
+            obj.giftee.fullname,
+            urlresolvers.reverse('admin:auth_user_change', args=[
+                obj.giftee.user.id
+            ]),
+            obj.giftee.user.username
+        )
+    giftee_link.allow_tags=True
+    giftee_link.short_description = 'АПП'
+
+    def santa_link(self, obj):
+        return '<a href="%s">%s</a> (<a href="%s">%s</a>)' % (
+            urlresolvers.reverse('admin:clubadm_member_change', args=[
+                obj.santa.id
+            ]),
+            obj.santa.fullname,
+            urlresolvers.reverse('admin:auth_user_change', args=[
+                obj.santa.user.id
+            ]),
+            obj.santa.user.username
+        )
+    santa_link.allow_tags=True
+    santa_link.short_description = 'АДМ'
 
 
 admin.site.site_title = 'Админка Клуба АДМ'
