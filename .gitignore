@@ -1,10 +1,13 @@
 *.py[co]
 .DS_Store
+.directory
 __pycache__
+backups/
 bower_components/
-clubadm.egg-info/
-dist/
+clubadm.tar.gz
 newsanta-static/
 newsanta.sqlite3
 oldsanta-static/
 oldsanta.sqlite3
+private/
+venv/

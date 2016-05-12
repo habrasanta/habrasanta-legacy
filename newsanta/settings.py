@@ -25,7 +25,6 @@ INSTALLED_APPS = (
     'rest_framework',
     'pipeline',
     'clubadm',
-    'debug_toolbar',
 )
 
 LANGUAGE_CODE = 'ru-ru'
@@ -33,25 +32,12 @@ LANGUAGE_CODE = 'ru-ru'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'simple',
         },
     },
     'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
         'clubadm': {
             'handlers': ['console'],
             'level': 'DEBUG',
@@ -66,15 +52,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'pipeline.middleware.MinifyHTMLMiddleware',
     'clubadm.middleware.LastVisitMiddleware',
 )
 
 ROOT_URLCONF = 'newsanta.urls'
 
-SECRET_KEY = '(s)425wsg71ko0h@gv1^9kj=#1i#r3d+jychb#jbn+)5601nar'
+SECRET_KEY = 'the_real_one_will_be_generated_by_fabfile.py'
 
 TEMPLATES = [
     {
@@ -103,8 +87,6 @@ USE_TZ = True
 WSGI_APPLICATION = 'newsanta.wsgi.application'
 
 
-# Хотя больное воображение параноика может сказать, что такой порядок бекендов
-# сольет на Хабр все пароли администраторов, это не так.
 AUTHENTICATION_BACKENDS = (
     'clubadm.auth_backends.TMServiceBackend',
     'django.contrib.auth.backends.ModelBackend',
@@ -193,3 +175,9 @@ TMAUTH_ENDPOINT_URL = 'http://localhost:5000'
 
 
 CLUBADM_KARMA_LIMIT = -15.0
+
+
+try:
+    from newsanta.local_settings import *
+except ImportError:
+    pass

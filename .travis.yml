@@ -10,7 +10,7 @@ before_script:
   - "python manage.py collectstatic --noinput --settings=oldsanta.settings"
   - "python manage.py collectstatic --noinput --settings=newsanta.settings"
 
-install: "python setup.py install"
+install: "pip install -r requirements/test.txt"
 
 script:
   - "python manage.py test --settings=oldsanta.settings"
