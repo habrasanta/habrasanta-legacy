@@ -2,7 +2,6 @@
 ==================================
 
 [![Build Status](https://travis-ci.org/clubadm/clubadm.svg?branch=master)](https://travis-ci.org/clubadm/clubadm)
-[![Dependency Status](https://www.versioneye.com/user/projects/569eb6902025a6002e0002c5/badge.svg?style=flat)](https://www.versioneye.com/user/projects/569eb6902025a6002e0002c5)
 
 Данный репозиторий содержит исходные коды сайтов
 [Клуба АДМ на Хабрахабре](https://habra-adm.ru/) (кодовое имя `oldsanta`) и
@@ -21,6 +20,10 @@ $ python3 faketimes.py
 $ git clone https://github.com/clubadm/clubadm.git
 $ cd clubadm
 $ bower install
-$ python3 manage.py migrate
-$ python3 manage.py runserver
+$ virtualenv venv
+$ source venv/bin/activate
+$ pip install -r requirements/dev.txt
+$ ./manage.py migrate
+$ ./manage.py runserver
+$ deactivate
 ```
