@@ -69,12 +69,13 @@ class ProfileInline(admin.TabularInline):
     can_delete = False
     fieldsets = (
         (None, {
-            'fields': ('karma', 'rating', 'is_readonly', 'can_participate',
-                       'is_oldfag', 'access_token')
+            'fields': ('karma', 'rating', 'is_readonly', 'is_readcomment',
+                       'can_participate', 'is_oldfag', 'access_token')
         }),
     )
     model = Profile
-    readonly_fields = ('karma', 'rating', 'is_readonly', 'can_participate')
+    readonly_fields = ('karma', 'rating', 'is_readonly', 'is_readcomment',
+                       'can_participate')
     verbose_name_plural = 'профиль'
 
 

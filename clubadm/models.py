@@ -121,6 +121,11 @@ class Profile(models.Model):
     is_female.boolean = True
     is_female.short_description = 'женщина'
 
+    def is_readcomment(self):
+        return self._service_profile.get('is_rc', True)
+    is_readcomment.boolean = True
+    is_readcomment.short_description = 'R&C'
+
     def is_readonly(self):
         return self._service_profile.get('is_readonly', True)
     is_readonly.boolean = True
@@ -134,8 +139,9 @@ class Profile(models.Model):
 
         Данный метод не берет в расчет конкретный сезон.
         """
-        return self.user.is_active and not self.is_readonly() and (
-            self.is_oldfag or self.karma() >= settings.CLUBADM_KARMA_LIMIT)
+        invited = not self.is_readonly() and not self.is_readcomment()
+        return self.user.is_active and invited and (self.is_oldfag or
+            self.karma() >= settings.CLUBADM_KARMA_LIMIT)
     can_participate.boolean = True
     can_participate.short_description = 'может участвовать'
 
