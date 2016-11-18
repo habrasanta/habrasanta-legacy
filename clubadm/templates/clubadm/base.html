@@ -10,5 +10,10 @@
     {% javascript "clubadm" %}
   </head>
   <body ng-class="$state.$current.data.classname" ui-view>
+    <noscript>
+      <div class="critical">
+        Один мальчик отключил JavaScript и не получил подарок.
+      </div>
+    </noscript>
   </body>
 </html>
