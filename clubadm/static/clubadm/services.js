@@ -85,7 +85,6 @@
      * Записать пользователя в участники.
      */
     this.signUp = function(year, form) {
-      console.log(form);
       return $http.post('/seasons/' + year + '/signup', form);
     };
 
