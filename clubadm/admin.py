@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.core import urlresolvers
 from django.core.cache import cache
+from django.http import JsonResponse
 
 from clubadm.forms import SeasonForm, UserForm
 from clubadm.models import Member, Profile, Season
@@ -10,7 +11,8 @@ from clubadm.tasks import match_members
 
 
 class SeasonAdmin(admin.ModelAdmin):
-    actions = ('match_members', 'block_members', 'clear_cache')
+    actions = ('match_members', 'block_members', 'clear_cache',
+               'give_badges')
     fieldsets = (
         (None, {'fields': ('year',)}),
         ('Сроки проведения', {
@@ -27,6 +29,20 @@ class SeasonAdmin(admin.ModelAdmin):
         if obj:
             return self.readonly_fields + ('year',)
         return self.readonly_fields
+
+    def give_badges(self, request, queryset):
+        array = []
+        for obj in queryset:
+            members = obj.member_set.filter(
+                gift_sent__isnull=False,
+                giftee__gift_received__isnull=False)
+            for member in members:
+                array.append([
+                    member.user.username,
+                    member.user.profile.id
+                ])
+        return JsonResponse(array, safe=False)
+    give_badges.short_description = 'Раздать значки "Дед Мороз"'
 
     # TODO(kafeman): Автоматически создавать задачу сортировки при сохранении.
     def match_members(self, request, queryset):
