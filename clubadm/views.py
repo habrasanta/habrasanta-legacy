@@ -304,6 +304,10 @@ class SeasonViewSet(viewsets.ViewSet):
         return 'mails_%d' % member_id
 
     def get_mails(self, member):
+        # Если участнику еще не назначен АПП, то возвращаем пустой ответ.
+        if not member.giftee:
+            return {'santa': [], 'giftee': []}
+
         mails_key = self.get_mails_key(member.id)
         mails = cache.get(mails_key)
 
