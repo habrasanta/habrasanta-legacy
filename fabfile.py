@@ -129,8 +129,8 @@ def setup_uwsgi():
     if not contains('/etc/rc.local', 'clubadm'):
         comment('/etc/rc.local', 'exit 0')
         append('/etc/rc.local', [
-            'uwsgi_python3 --ini /home/apps/clubadm/oldsanta/uwsgi.ini',
-            'uwsgi_python3 --ini /home/apps/clubadm/newsanta/uwsgi.ini',
+            'uwsgi_python35 --ini /home/apps/clubadm/oldsanta/uwsgi.ini',
+            'uwsgi_python35 --ini /home/apps/clubadm/newsanta/uwsgi.ini',
             'exit 0'
         ])
         run('/etc/rc.local')
@@ -248,8 +248,8 @@ def migrate():
 
 def reload_uwsgi():
     """Перезапустить uwsgi (= наши django-проекты)."""
-    run('uwsgi_python3 --reload /var/run/uwsgi/oldsanta.pid')
-    run('uwsgi_python3 --reload /var/run/uwsgi/newsanta.pid')
+    run('uwsgi_python35 --reload /var/run/uwsgi/oldsanta.pid')
+    run('uwsgi_python35 --reload /var/run/uwsgi/newsanta.pid')
 
 
 def reload_nginx():
