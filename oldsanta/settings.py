@@ -179,7 +179,7 @@ TMAUTH_LOGIN_URL = 'http://localhost:5000/login'
 TMAUTH_ENDPOINT_URL = 'http://localhost:5000'
 
 
-CLUBADM_KARMA_LIMIT = 20.0
+CLUBADM_KARMA_LIMIT = 10.0
 
 
 try:
