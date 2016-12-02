@@ -3,7 +3,7 @@ from django.contrib.auth.views import logout
 
 from rest_framework.routers import SimpleRouter
 
-from clubadm import views
+from clubadm import views, admin
 
 
 router = SimpleRouter(trailing_slash=False)
@@ -20,4 +20,7 @@ urlpatterns = [
     # Для старых ссылок со внешних ресурсов
     url(r'^profile$', views.oldprofile), # АДМ-2012 и АДМ-2013
     url(r'^(?P<year>[0-9]+)/profile$', views.oldprofile), # АДМ-2014
+
+    # Админка
+    url(r'^admin/', admin.site.urls),
 ]

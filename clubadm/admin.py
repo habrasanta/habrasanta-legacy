@@ -3,7 +3,11 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.core import urlresolvers
 from django.core.cache import cache
-from django.http import JsonResponse
+from django.core.urlresolvers import reverse
+from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect
+from django.utils.http import urlencode
+from django.views.decorators.cache import never_cache
 
 from clubadm.forms import SeasonForm, UserForm
 from clubadm.models import Member, Profile, Season
@@ -155,11 +159,25 @@ class MemberAdmin(admin.ModelAdmin):
     santa_link.short_description = 'АДМ'
 
 
-admin.site.site_title = 'Админка Клуба АДМ'
-admin.site.site_header = 'Кабинет Деда Мороза'
+class AdminSite(admin.AdminSite):
+    site_header = 'Кабинет Деда Мороза'
+    site_title = 'Админка Клуба АДМ'
 
-admin.site.register(Season, SeasonAdmin)
-admin.site.register(Member, MemberAdmin)
+    @never_cache
+    def login(self, request, extra_context=None):
+        index_path = reverse('admin:index', current_app=self.name)
+        if request.user.is_authenticated:
+            if request.user.is_staff:
+                return HttpResponseRedirect(index_path)
+            raise Http404()
+        query_string = urlencode({
+            'next': request.GET.get('next', index_path)
+        })
+        return HttpResponseRedirect(
+            '%s?%s' % (reverse('login'), query_string))
 
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
+
+site = AdminSite()
+site.register(Season, SeasonAdmin)
+site.register(Member, MemberAdmin)
+site.register(User, UserAdmin)
