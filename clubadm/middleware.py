@@ -1,14 +1,25 @@
+from django.http import Http404
 from django.utils import timezone
 
-from clubadm.models import Member
+from clubadm.models import Member, Season
 
 
-class LastVisitMiddleware(object):
+class SeasonMiddleware(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
-        if 'pk' in view_kwargs and request.user.is_authenticated():
-            if not view_kwargs['pk'].isdigit():
-                return
-            Member.objects.filter(
-                season_id=view_kwargs['pk'],
-                user=request.user
-            ).update(last_visit=timezone.now())
+        if "year" in view_kwargs:
+            year = int(view_kwargs["year"])
+            try:
+                request.season = Season.objects.get_by_year(year)
+            except Season.DoesNotExist:
+                raise Http404("Такой сезон еще не создан")
+
+
+class MemberMiddleware(object):
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        if "year" in view_kwargs and request.user.is_authenticated:
+            year = int(view_kwargs["year"])
+            try:
+                request.member = Member.objects.get_by_user_and_year(
+                    request.user, year)
+            except Member.DoesNotExist:
+                request.member = None

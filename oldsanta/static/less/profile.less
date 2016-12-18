@@ -1,5 +1,14 @@
 .profile {
-  background: url(../images/background.png);
+  background: #382751 url(../images/background.png);
+
+  .angular {
+    opacity: 0;
+    transition: opacity 500ms;
+  }
+
+  .angular.loaded {
+    opacity: 1;
+  }
 
   &-loading {
     background: rgba(0, 0, 0, 0.8);

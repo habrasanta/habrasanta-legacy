@@ -1,76 +1,55 @@
-import logging
 import requests
 
 from django.conf import settings
 from django.contrib.auth.backends import ModelBackend
-from django.contrib.auth.models import User
 from django.core.cache import cache
 
-from clubadm.models import Profile
+from clubadm.models import User
 
 
-logger = logging.getLogger(__name__)
-
-
-class TMServiceBackend(ModelBackend):
+class TechMediaBackend(ModelBackend):
     def authenticate(self, access_token=None):
-        service_profile = self.get_service_profile(access_token)
-        profile_id = service_profile.get('id')
-
+        remote = self.get_remote_user(access_token)
+        if not remote:
+            return None
+        user_id = remote.get("id")
+        username = remote.get("login")
+        changed = False
         try:
-            profile = Profile.objects.get(pk=profile_id)
-        except Profile.DoesNotExist:
-            username = service_profile.get('login')
+            user = User.objects.get_by_id(user_id)
+        except User.DoesNotExist:
+            user = User(pk=user_id, username=username)
+            changed = True
+        if user.username != username:
+            user.username = username
+            changed = True
+        if user.access_token != access_token:
+            user.access_token = access_token
+            changed = True
+        if changed:
+            user.save()
+        return user
 
-            try:
-                user = User.objects.get(username__iexact=username)
-                logger.debug('Пользователь %s существует, связываю его с '
-                             'новым профилем %d.', username, profile_id)
-            except User.DoesNotExist:
-                user = User(username=username)
-                user.save()
-
-            profile = Profile(id=profile_id)
-            profile.user = user
-
-        if profile.access_token != access_token:
-            logger.debug('Токен доступа изменился: %s -> %s.',
-                         profile.access_token, access_token)
-            profile.access_token = access_token
-            profile.save()
-
-        return profile.user
-
-    def get_service_profile(self, access_token):
+    def get_remote_user(self, access_token):
         if not access_token:
             return None
-
-        service_profile_key = 'service_profile_%s' % access_token
-        service_profile = cache.get(service_profile_key)
-
-        if not service_profile:
-            logger.debug('Кеш для %s не найден, делаю запрос.', access_token)
-            url = '%s%s' % (settings.TMAUTH_ENDPOINT_URL, '/users/me')
-            response = requests.get(url, headers = {
-                'client': settings.TMAUTH_CLIENT,
-                'token': access_token
+        user_key = "token:%s" % access_token
+        user = cache.get(user_key)
+        if not user:
+            url = "%s/users/me" % settings.TMAUTH_ENDPOINT_URL
+            response = requests.get(url, headers={
+                "client": settings.TMAUTH_CLIENT,
+                "token": access_token
             })
-            response.raise_for_status()
-            service_profile = response.json().get('data')
-            cache.set(service_profile_key, service_profile)
-            logger.debug(service_profile)
-
-        return service_profile
+            if response.status_code != 200:
+                return False
+            user = response.json().get("data")
+            cache.set(user_key, user)
+        return user
 
     def get_user(self, user_id):
-        user_key = 'user_%d' % user_id
-        user = cache.get(user_key)
-
-        if not user:
-            try:
-                user = User.objects.select_related('profile').get(id=user_id)
-                cache.set(user_key, user)
-            except User.DoesNotExist:
-                return None
-
+        try:
+            user = User.objects.get_by_id(user_id)
+        except User.DoesNotExist:
+            return None
         return user

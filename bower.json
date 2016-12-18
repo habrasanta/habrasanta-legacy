@@ -8,7 +8,6 @@
   "dependencies": {
     "angular": "1.4.8",
     "angular-i18n": "1.4.8",
-    "angular-ui-router": "0.2.15",
     "angular-moment": "1.0.0-beta.3",
     "moment": "2.10.6",
     "angular-scroll-glue": "2.0.6",

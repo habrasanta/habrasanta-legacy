@@ -1,1 +1,1 @@
-default_app_config = 'clubadm.apps.ClubADMConfig'
+default_app_config = "clubadm.apps.ClubADMConfig"

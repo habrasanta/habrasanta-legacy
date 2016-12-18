@@ -4,331 +4,249 @@ import requests
 
 from django.conf import settings
 from django.contrib.auth import authenticate, login as auth_login
-from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
-from django.db.models import Q
-from django.http import Http404
-from django.middleware.csrf import get_token
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
-from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.http import urlencode
 
-from rest_framework import status
-from rest_framework import viewsets
-from rest_framework.decorators import detail_route, permission_classes
-from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-
 from clubadm.models import Season, Member, Mail
-from clubadm.serializers import SeasonSerializer, MemberSerializer, ChatSerializer
+from clubadm.serializers import SeasonSerializer, MemberSerializer, UserSerializer
 
 
 logger = logging.getLogger(__name__)
 
 
+class _AjaxException(Exception):
+    pass
+
+
+class _AjaxResponse(HttpResponse):
+    def __init__(self, data, status=200):
+        content = json.dumps(data, ensure_ascii=False, separators=(",", ": "), indent=2)
+        super(_AjaxResponse, self).__init__(
+            content=content, status=status, charset="utf-8",
+            content_type="application/json;charset=utf-8")
+
+
+def _ajax_view(member_required=False, match_required=False):
+    def decorator(func):
+        def view(request, *args, **kwargs):
+            if request.method != "POST":
+                return _AjaxResponse({
+                    "error": "Используйте POST, пожалуйста"
+                }, status=405)
+            if request.user.is_anonymous:
+                return _AjaxResponse({
+                    "error": "Представьтесь, пожалуйста"
+                }, status=403)
+            if member_required and not request.member:
+                return _AjaxResponse({
+                    "error": "Ой, а вы во всем этом и не участвуете"
+                }, status=403)
+            if match_required and not request.member.giftee_id:
+                return _AjaxResponse({
+                    "error": "Давайте дождемся жеребьевки, а там посмотрим"
+                }, status=403)
+            try:
+                return func(request)
+            except _AjaxException as e:
+                return _AjaxResponse({
+                    "error": str(e)
+                }, status=400)
+        return view
+    return decorator
+
+
 def home(request):
-    jsdata = {
-        'user': None,
-        'security': {
-            'token': get_token(request),
-        },
-        'partials': {
-            'season': staticfiles_storage.url('season.html'),
-            'welcome': staticfiles_storage.url('welcome.html'),
-            'profile': staticfiles_storage.url('profile.html'),
-        },
-    }
-    if request.user.is_authenticated():
-        jsdata['user'] = {
-            'username': request.user.username,
-            'avatar': request.user.profile.avatar(),
-            'is_active': request.user.is_active,
-            'can_participate': request.user.profile.can_participate(),
-        }
-    return render(request, 'clubadm/index.html', {
-        'jsdata': json.dumps(jsdata, separators=(',', ':'))
+    try:
+        season = Season.objects.latest()
+    except Season.DoesNotExist:
+        return redirect("admin:clubadm_season_add")
+    if request.user.is_authenticated:
+        return redirect("profile", year=season.year)
+    return redirect("welcome", year=season.year)
+
+
+def welcome(request, year):
+    if request.user.is_authenticated:
+        return redirect("profile", year=year)
+    return render(request, "clubadm/welcome.html", {
+        "season": request.season,
     })
 
 
-def oldprofile(request, year=None):
-    if year:
-        return redirect('/#/%s/profile' % year)
-    # В 2012 г. данные аутентификации хранились в параметре hash.
-    if 'hash' in request.GET:
-        return redirect('/#/2012/profile')
-    return redirect('/#/2013/profile')
+def profile(request, year):
+    if request.user.is_anonymous:
+        return redirect("welcome", year=year)
+
+    prefetched = {
+        "season": SeasonSerializer(request.season).data,
+        "user": UserSerializer(request.user).data,
+        "member": None,
+    }
+
+    if request.member:
+        prefetched["member"] = MemberSerializer(request.member).data
+
+    return render(request, "clubadm/profile.html", {
+        "season": request.season,
+        "prefetched": json.dumps(prefetched, ensure_ascii=False),
+    })
+
+
+def profile_legacy(request):
+    if "hash" in request.GET:
+        return redirect("profile", year=2012)
+    return redirect("profile", year=2013)
 
 
 def login(request):
-    redirect_uri = '%s?%s' % (reverse('callback'), urlencode({
-        'next': request.GET.get('next', reverse('home'))
+    redirect_uri = "%s?%s" % (reverse("callback"), urlencode({
+        "next": request.GET.get("next", reverse("home"))
     }))
-    return redirect('%s?%s' % (settings.TMAUTH_LOGIN_URL, urlencode({
-        'client_id': settings.TMAUTH_CLIENT,
-        'response_type': 'code',
-        'redirect_uri': request.build_absolute_uri(redirect_uri),
+
+    return HttpResponseRedirect("%s?%s" % (settings.TMAUTH_LOGIN_URL, urlencode({
+        "client_id": settings.TMAUTH_CLIENT,
+        "response_type": "code",
+        "redirect_uri": request.build_absolute_uri(redirect_uri),
     })))
 
 
 def callback(request):
-    error = request.GET.get('error')
-    if error:
-        logger.error('Не удалось получить code: %s.', error)
-        return redirect(reverse('home'))
+    if "error" in request.GET:
+        return redirect("home")
 
-    response = requests.post(settings.TMAUTH_TOKEN_URL, data = {
-        'grant_type': 'authorization_code',
-        'code': request.GET.get('code'),
-        'client_id': settings.TMAUTH_CLIENT,
-        'client_secret': settings.TMAUTH_SECRET
+    response = requests.post(settings.TMAUTH_TOKEN_URL, data={
+        "grant_type": "authorization_code",
+        "code": request.GET.get("code"),
+        "client_id": settings.TMAUTH_CLIENT,
+        "client_secret": settings.TMAUTH_SECRET
     })
     response.raise_for_status()
 
-    user = authenticate(access_token=response.json().get('access_token'))
+    user = authenticate(access_token=response.json().get("access_token"))
     auth_login(request, user)
 
-    # FIXME(kafeman): Если next содержит полный путь, а response_type был
-    # изменен на token, то токен утечет на внешний сайт. Но всем как всегда...
-    redirect_to = request.GET.get('next', reverse('home'))
-    return redirect(redirect_to)
+    redirect_to = request.GET.get("next", reverse("home"))
+    return HttpResponseRedirect(redirect_to)
 
 
-class SeasonViewSet(viewsets.ViewSet):
-    """Обработчик всех AJAX-запросов."""
-    def retrieve(self, request, pk=None):
-        season = self.get_season(pk)
-        serializer = SeasonSerializer(season)
-        return Response(serializer.data)
+@_ajax_view(member_required=False, match_required=False)
+def signup(request):
+    if not request.season.is_participatable:
+        raise _AjaxException("Регистрация на этот сезон не возможна")
+    if request.member:
+        raise _AjaxException("Вы уже зарегистрированы на этот сезон")
+    if not request.user.can_participate:
+        raise _AjaxException("Вы не можете участвовать в нашем клубе")
+    serializer = MemberSerializer(data=request.POST)
+    if not serializer.is_valid():
+        raise _AjaxException("Форма заполнена неверно")
+    serializer.save(season=request.season, user=request.user)
+    cache.delete(request.season.cache_key)
+    request.season.members += 1
+    return _AjaxResponse({
+        "season": SeasonSerializer(request.season).data,
+        "member": serializer.data,
+    })
 
-    @detail_route(methods=['get'], permission_classes=[IsAuthenticated])
-    def member(self, request, pk=None):
-        """Возвращает информацию об участнике.
 
-        TODO(kafeman): Объединить с retrieve.
-        """
-        member = self.get_member(request, pk)
-        serializer = MemberSerializer(member)
-        return Response(serializer.data)
+@_ajax_view(member_required=True, match_required=False)
+def signout(request):
+    if not request.season.is_participatable or request.member.giftee_id:
+        raise _AjaxException("Время на решение истекло")
+    request.member.delete()
+    cache.delete(request.season.cache_key)
+    request.season.members -= 1
+    return _AjaxResponse({
+        "season": SeasonSerializer(request.season).data,
+        "member": None,
+    })
 
-    @detail_route(methods=['get'], permission_classes=[IsAuthenticated])
-    def chat(self, request, pk=None):
-        """Возвращает сообщения из чата.
 
-        TODO(kafeman): Объединить с retrieve.
-        """
-        member = self.get_member(request, pk)
-        mails = self.get_mails(member)
-
-        serializer = ChatSerializer(mails, context={
-            'member': member
-        })
-        return Response(serializer.data)
-
-    @detail_route(methods=['post'], permission_classes=[IsAuthenticated])
-    def send_mail(self, request, pk=None):
-        """Отправляет письмо в чатик."""
-        member = self.get_member(request, pk)
-
-        if member.season.is_closed():
-            raise ValidationError('Сезон перенесен в архив.')
-
-        body = request.data.get('body', '').strip()
-        if not body:
-            raise ValidationError('Вначале нужно что-то написать.')
-
-        recipient = request.data.get('recipient')
-        if recipient == 'giftee':
-            if not member.giftee:
-                raise ValidationError('У вас нет АПП.')
-            member.giftee.send_notification(
-                'Новое сообщение от Деда Мороза',
-                render_to_string('clubadm/notification_santa_mail.html', {
-                    'season': member.season
-                }))
-            mail = Mail(body=body, sender=member, recipient=member.giftee)
-            mail.save()
-            self.delete_mails_cache(member)
-            self.delete_mails_cache(member.giftee)
-        else:
-            if not member.santa:
-                raise ValidationError('У вас нет АДМ.')
-            member.santa.send_notification(
-                'Новое сообщение от получателя подарка',
-                render_to_string('clubadm/notification_giftee_mail.html', {
-                    'season': member.season
-                }))
-            mail = Mail(body=body, sender=member, recipient=member.santa)
-            mail.save()
-            self.delete_mails_cache(member)
-            self.delete_mails_cache(member.santa)
-
-        mails = self.get_mails(member)
-        serializer = ChatSerializer(mails, context={
-            'member': member
-        })
-
-        return Response(serializer.data)
-
-    @detail_route(methods=['post'], permission_classes=[IsAuthenticated])
-    def send_gift(self, request, pk=None):
-        """Отмечает, что участник отправил подарок."""
-        member = self.get_member(request, pk)
-
-        if member.season.is_closed():
-            raise ValidationError('Сезон перенесен в архив.')
-
-        if not member.giftee:
-            raise ValidationError('У вас нет АПП.')
-
-        if member.is_gift_sent():
-            raise ValidationError('Подарок уже отправлен.')
-        member.gift_sent = timezone.now()
-        member.giftee.send_notification(
-            'Вам отправлен подарок',
-            'Пожалуйста, не забудьте отметить его получение.')
-        member.save()
-
-        cache.delete_many([
-            'member_%d_%s' % (member.user.id, pk),
-            'member_%d_%s' % (member.giftee.user.id, pk),
-        ])
-
-        serializer = MemberSerializer(member)
-        return Response(serializer.data)
-
-    @detail_route(methods=['post'], permission_classes=[IsAuthenticated])
-    def receive_gift(self, request, pk=None):
-        """Отмечает, что участник получил подарок."""
-        member = self.get_member(request, pk)
-
-        if member.season.is_closed():
-            raise ValidationError('Сезон перенесен в архив.')
-
-        if not member.santa:
-            raise ValidationError('У вас нет АДМ.')
-
-        if member.is_gift_received():
-            raise ValidationError('Подарок уже получен.')
-        member.gift_received = timezone.now()
-        member.santa.send_notification(
-            'Ваш подарок получен',
-            'Ваш АПП отметил в профиле, что подарок получен.')
-        member.save()
-
-        cache.delete_many([
-            'member_%d_%s' % (member.user.id, pk),
-            'member_%d_%s' % (member.santa.user.id, pk),
-        ])
-
-        serializer = MemberSerializer(member)
-        return Response(serializer.data)
-
-    @detail_route(methods=['post'], permission_classes=[IsAuthenticated])
-    def signup(self, request, pk=None):
-        """Регистрирует участника на сезон."""
-        season = self.get_season(pk)
-        if not season.is_participatable():
-            raise ValidationError('Регистрация на сезон завершена.')
-
-        try:
-            self.get_member(request, pk)
-            raise ValidationError('Вы уже зарегистрированы на этот сезон.')
-        except Http404:
-            if not request.user.profile.can_participate():
-                logger.warning('%s идет против системы.', request.user.username)
-                raise ValidationError('Вы не можете участвовать в Клубе АДМ.')
-
-        serializer = MemberSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(season=season, user=request.user)
-
-        # Чтобы сбросить счетчик участников.
-        self.delete_season_cache(pk)
-
-        return Response(serializer.data)
-
-    @detail_route(methods=['post'], permission_classes=[IsAuthenticated])
-    def signout(self, request, pk=None):
-        """Отменить участие."""
-        member = self.get_member(request, pk)
-
-        if member.giftee or not member.season.is_participatable():
-            raise ValidationError('Слишком поздно.')
-
-        member.delete()
-        self.delete_member_cache(request, pk)
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def get_season_key(self, year):
-        return 'season_%s' % year
-
-    def get_season(self, year):
-        season_key = self.get_season_key(year)
-        season = cache.get(season_key)
-
-        if not season:
-            try:
-                season = season = Season.objects.get_by_year(year)
-            except (Season.DoesNotExist, ValueError):
-                raise Http404
-            cache.set(season_key, season)
-
-        return season
-
-    def delete_season_cache(self, year):
-        season_key = self.get_season_key(year)
-        cache.delete(season_key)
-
-    def get_member_key(self, user_id, year):
-        return 'member_%d_%s' % (user_id, year)
-
-    def get_member(self, request, year):
-        member_key = self.get_member_key(request.user.id, year)
-        member = cache.get(member_key)
-
-        if not member:
-            member = Member.objects.get_by_user_and_year(request.user.id, year)
-            cache.set(member_key, member)
-
-        return member
-
-    def delete_member_cache(self, request, year):
-        member_key = self.get_member_key(request.user.id, year)
-        cache.delete(member_key)
-
-    def get_mails_key(self, member_id):
-        return 'mails_%d' % member_id
-
-    def get_mails(self, member):
-        # Если участнику еще не назначен АПП, то возвращаем пустой ответ.
-        if not member.giftee:
-            return {'santa': [], 'giftee': []}
-
-        mails_key = self.get_mails_key(member.id)
-        mails = cache.get(mails_key)
-
-        if not mails:
-            santa_mails = list(Mail.objects.filter(
-                Q(sender=member, recipient=member.santa) |
-                Q(sender=member.santa, recipient=member)
-            ))
-            giftee_mails = list(Mail.objects.filter(
-                Q(sender=member, recipient=member.giftee) |
-                Q(sender=member.giftee, recipient=member)
-            ))
-            mails = {
-                'santa': santa_mails,
-                'giftee': giftee_mails
+@_ajax_view(member_required=True, match_required=True)
+def send_mail(request):
+    if request.season.is_closed:
+        raise _AjaxException("Этот сезон находится в архиве")
+    body = request.POST.get("body", "")
+    if not body.strip():
+        raise _AjaxException("Вначале нужно что-то написать")
+    recipient = request.POST.get("recipient", "")
+    if recipient == "giftee":
+        request.member.send_mail(body, request.member.giftee)
+        request.member.giftee.user.send_notification(
+            "Новое сообщение от Деда Мороза",
+            "clubadm/notifications/santa_mail.html", {
+                "season": request.season
             }
-            cache.set(mails_key, mails)
+        )
+    elif recipient == "santa":
+        request.member.send_mail(body, request.member.santa)
+        request.member.santa.user.send_notification(
+            "Новое сообщение от получателя подарка",
+            "clubadm/notifications/giftee_mail.html", {
+                "season": request.season
+            }
+        )
+    else:
+        raise _AjaxException("Неизвестный получатель")
+    return _AjaxResponse({
+        "season": SeasonSerializer(request.season).data,
+        "member": MemberSerializer(request.member).data,
+    })
 
-        return mails
 
-    def delete_mails_cache(self, member):
-        mails_key = self.get_mails_key(member.id)
-        cache.delete(mails_key)
+@_ajax_view(member_required=True, match_required=True)
+def read_mails(request):
+    sender = request.POST.get("sender", "")
+    timestamp = request.POST.get("timestamp", 0.0)
+    try:
+        timestamp = float(timestamp)
+    except ValueError:
+        raise _AjaxException("Нахрена тут строка?")
+    if sender == "giftee":
+        request.member.read_mails(request.member.giftee, timestamp)
+    elif sender == "santa":
+        request.member.read_mails(request.member.santa, timestamp)
+    else:
+        raise _AjaxException("Неизвестный отправитель")
+    return _AjaxResponse({
+        "season": SeasonSerializer(request.season).data,
+        "member": MemberSerializer(request.member).data,
+    })
 
+
+@_ajax_view(member_required=True, match_required=True)
+def send_gift(request):
+    if request.season.is_closed:
+        raise _AjaxException("Этот сезон находится в архиве")
+    if request.member.is_gift_sent:
+        raise _AjaxException("Вами уже был отправлен один подарок")
+    request.member.send_gift()
+    cache.delete(request.season.cache_key)
+    request.season.sent += 1
+    request.member.giftee.user.send_notification(
+        "Вам отправлен подарок", "clubadm/notifications/gift_sent.html")
+    return _AjaxResponse({
+        "season": SeasonSerializer(request.season).data,
+        "member": MemberSerializer(request.member).data,
+    })
+
+
+@_ajax_view(member_required=True, match_required=True)
+def receive_gift(request):
+    if request.season.is_closed:
+        raise _AjaxException("Этот сезон находится в архиве")
+    if request.member.is_gift_received:
+        raise _AjaxException("Вами уже был получен один подарок")
+    request.member.receive_gift()
+    cache.delete(request.season.cache_key)
+    request.season.received += 1
+    request.member.santa.user.send_notification(
+        "Ваш подарок получен", "clubadm/notifications/gift_received.html")
+    return _AjaxResponse({
+        "season": SeasonSerializer(request.season).data,
+        "member": MemberSerializer(request.member).data,
+    })

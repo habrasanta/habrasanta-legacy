@@ -1,0 +1,93 @@
+{% extends "clubadm/base.html" %}
+
+{% block body %}
+  <header class="banner">
+    <canvas id="welcome-snow"></canvas>
+    <div class="banner-inner">
+      <div class="thing thing-snowflake"></div>
+      <div class="thing thing-snowflake2"></div>
+      <div class="logo">
+        <!-- TODO(kafeman): Перевести графику в текст (сделать как на ХабраАДМ) -->
+      </div>
+      <img class="santa" src="/static/santa.png" alt="Дед Мороз">
+      <img class="tree" src="/static/tree.png" alt="Дерево">
+      <div class="thing thing-candy"></div>
+      <div class="thing thing-bitcoin"></div>
+      <hgroup class="banner-welcome">
+        <h1>Рады видеть тебя в нашем клубе</h1>
+        <h2>
+          <abbr title="Участники оставляют свои адреса, затем ЭВМ пересортировывает их и каждому участнику отправляется адрес человека, которому он должен выслать такой подарок, какой посчитает нужным.">
+            Анонимных Дедов Морозов
+          </abbr>
+        </h2>
+      </hgroup>
+      <div class="banner-members">
+        На этот год уже записались
+        <div class="banner-counter">
+          <b ng-repeat="digit in season.members.toString()">{% verbatim %}{{ digit }}{% endverbatim %}</b>
+        </div>
+        <ng-pluralize count="season.members" when="{
+          'one': 'участник',
+          'few': 'участника',
+          'many': 'участников'
+        }"></ng-pluralize>
+      </div>
+    </div>
+  </header>
+  <section id="description" class="section">
+    <div class="section-inner">
+      <img class="star" src="/static/star.png" alt="Звездочка">
+      <article id="many-members">
+        <img src="/static/santa1.png" alt="Дед Мороз">
+        <h1>1500&nbsp;участников</h1>
+        <p>
+          Акция проходит ежегодно с&nbsp;2012&nbsp;г. За&nbsp;это время
+          в&nbsp;ней успело принять участие более 1500&nbsp;человек.
+          Из&nbsp;всех подобных сообществ в&nbsp;Рунете с&nbsp;открытой
+          статистикой, у&nbsp;нас самая высокая вероятность получения подарка.
+          Но&nbsp;для&nbsp;обманщиков пути сюда нет&nbsp;&mdash; бан получают
+          всерьез и&nbsp;надолго.
+        </p>
+      </article>
+      <article id="super-security">
+        <img src="/static/santa2.png" alt="Дед Мороз">
+        <h1>Полная анонимность</h1>
+        <p>
+          Все полностью анонимно. В&nbsp;час&nbsp;X приходит почтовый адрес,
+          по&nbsp;которому необходимо отправить подарок. Никто
+          из&nbsp;участников не&nbsp;знает, кому он отправляет свою посылку.
+          Все очень хорошо в&nbsp;плане безопасности (защиненное
+          HTTPS-соединение и
+          <a href="https://github.com/clubadm/clubadm/">открытые исходники</a>
+          на&nbsp;Github'е).
+        </p>
+      </article>
+    </div>
+  </section>
+  <section id="summary" class="section">
+    <div class="section-inner">
+      <img src="/static/worldmap.png" alt="Мировая карта">
+      <hgroup>
+        <h1>В&nbsp;акции участвуют</h1>
+        <h2>Пользователи Geektimes со&nbsp;всего мира</h2>
+      </hgroup>
+      <hr>
+      <hgroup>
+        <h1>Никаках ограничений на&nbsp;подарок нет</h1>
+        <h2>
+          Нужно просто представить, что&nbsp;бы хотел получить сам,
+          и&nbsp;отправить это другому
+        </h2>
+      </hgroup>
+      <p>
+        Дорогой подарок&nbsp;&mdash; не&nbsp;значит лучший! Что дарили
+        в&nbsp;прошлом&nbsp;году можно посмотреть
+        <a href="http://habrahabr.ru/search/?q=пост+хвастовства+новогодними+подарками">тут</a>.
+      </p>
+      <a class="btn login-btn" href="/login?next=%2F{{ season.year }}%2Fprofile%2F">
+        Войти через Geektimes
+      </a>
+      <div class="thing thing-candy2"></div>
+    </div>
+  </section>
+{% endblock %}

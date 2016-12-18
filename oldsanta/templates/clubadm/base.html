@@ -1,0 +1,36 @@
+{% load staticfiles pipeline %}
+<!DOCTYPE html>
+<html ng-app="clubadm">
+  <head>
+    <meta charset="utf-8">
+    <title>Клуб анонимных Дедов Морозов {{ season.year }} на Хабрахабре</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+    {% stylesheet "clubadm" %}
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Sans:400,700&amp;subset=latin,cyrillic">
+  </head>
+  <body{% block body_attrs %}{% endblock %}>
+    {% if season.is_closed %}
+      <div class="alert">
+        Внимание! АДМ-{{ season.year }} уже завершен, вы смотрите архивную
+        версию! Новая <a href="/">тут</a>.
+      </div>
+    {% endif %}
+    {% block body %}{% endblock %}
+    <footer class="footer" role="contentinfo">
+      <a class="footer-designer" href="http://novosylov.livejournal.com/">
+        Валя Новоселов<br>дизайнер
+      </a>
+      <div class="footer-feedback">
+        В любой непонятной ситуации<br>пишите
+        <a href="mailto:support@habra-adm.ru">support@habra-adm.ru</a>
+      </div>
+    </footer>
+    <script type="text/javascript">
+      var legacyPath = window.location.hash.substr(1);
+      if (legacyPath.indexOf("/") == 0) {
+        window.location.replace(legacyPath);
+      }
+    </script>
+    {% javascript "clubadm" %}
+  </body>
+</html>
