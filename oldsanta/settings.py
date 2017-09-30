@@ -183,9 +183,9 @@ TMAUTH_ENDPOINT_URL = "http://localhost:5000"
 
 
 CLUBADM_ADMINS = (
-    "negasus",
+#    "negasus",
     "kafeman",
-    "mkruglova",
+#    "mkruglova",
 )
 
 CLUBADM_KARMA_LIMIT = 10.0
