@@ -2,10 +2,8 @@
 .DS_Store
 .directory
 __pycache__
-backups/
 node_modules/
-clubadm.tar.gz
 oldsanta-static/
 oldsanta.sqlite3
-private/
 venv/
+oldsanta/local_settings.py

@@ -63,7 +63,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = "oldsanta.urls"
 
-SECRET_KEY = "the_real_one_will_be_generated_by_fabfile.py"
+SECRET_KEY = "override this key in local_settings.py"
 
 TEMPLATES = [
     {

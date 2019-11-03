@@ -2,6 +2,5 @@ celery==3.1.21
 django==1.10
 django-pipeline==1.6.8
 djangorestframework==3.4.4
-fabric3==1.12.post1
 jinja2==2.8
 requests==2.11.0
