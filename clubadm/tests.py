@@ -2,13 +2,10 @@ import datetime
 
 from django.core.cache import cache
 from django.test import TestCase, Client
-from django.test.utils import setup_test_environment
 from django.utils import timezone
 
 from clubadm.models import Season, Member
 
-
-setup_test_environment()
 
 client = Client()
 
