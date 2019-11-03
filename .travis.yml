@@ -8,10 +8,8 @@ before_script:
   - "npm install -g less yuglify bower"
   - "bower install"
   - "python manage.py collectstatic --noinput --settings=oldsanta.settings"
-  - "python manage.py collectstatic --noinput --settings=newsanta.settings"
 
 install: "pip install -r requirements/test.txt"
 
 script:
   - "python manage.py test --settings=oldsanta.settings"
-  - "python manage.py test --settings=newsanta.settings"

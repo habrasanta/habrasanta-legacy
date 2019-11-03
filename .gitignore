@@ -5,8 +5,6 @@ __pycache__
 backups/
 bower_components/
 clubadm.tar.gz
-newsanta-static/
-newsanta.sqlite3
 oldsanta-static/
 oldsanta.sqlite3
 private/
