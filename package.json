@@ -1,12 +1,12 @@
 {
   "private": true,
   "dependencies": {
-    "angular": "1.4.8",
-    "angular-i18n": "1.4.8",
+    "angular": "1.6.0",
+    "angular-i18n": "1.6.0",
     "angular-moment": "1.0.0-beta.3",
     "angularjs-scroll-glue": "2.0.7",
     "less": "3.10.3",
-    "moment": "2.10.6",
+    "moment": "2.19.3",
     "yuglify": "2.0.0"
   }
 }

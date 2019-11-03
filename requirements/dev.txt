@@ -1,6 +1,6 @@
 celery==3.1.21
-django==1.10
+django==1.11.20
 django-pipeline==1.6.8
-djangorestframework==3.4.4
-jinja2==2.8
-requests==2.11.0
+djangorestframework==3.9.1
+jinja2==2.10.1
+requests==2.20.0
