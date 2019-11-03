@@ -191,6 +191,12 @@ CLUBADM_ADMINS = (
 CLUBADM_KARMA_LIMIT = 10.0
 
 
+try:
+    from oldsanta.local_settings import *
+except ImportError:
+    pass
+
+
 if DEBUG:
     INSTALLED_APPS += (
         "debug_toolbar",
@@ -198,9 +204,3 @@ if DEBUG:
     MIDDLEWARE_CLASSES = (
         "debug_toolbar.middleware.DebugToolbarMiddleware",
     ) + MIDDLEWARE_CLASSES
-
-
-try:
-    from oldsanta.local_settings import *
-except ImportError:
-    pass
