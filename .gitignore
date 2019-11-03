@@ -3,7 +3,7 @@
 .directory
 __pycache__
 backups/
-bower_components/
+node_modules/
 clubadm.tar.gz
 oldsanta-static/
 oldsanta.sqlite3

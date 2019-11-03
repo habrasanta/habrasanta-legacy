@@ -1,14 +1,10 @@
-language: "python"
-
+language: python
 python:
   - "3.6"
-
+install:
+  - npm install
+  - pip install -r requirements/test.txt
 before_script:
-  - "npm install -g less yuglify bower"
-  - "bower install"
-  - "python manage.py collectstatic --noinput --settings=oldsanta.settings"
-
-install: "pip install -r requirements/test.txt"
-
+  - python manage.py collectstatic --no-input
 script:
-  - "python manage.py test --settings=oldsanta.settings"
+  - python manage.py test

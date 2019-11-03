@@ -104,7 +104,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "oldsanta-static")
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "bower_components"),
+    os.path.join(BASE_DIR, "node_modules", "angular"),
+    os.path.join(BASE_DIR, "node_modules", "angular-i18n"),
+    os.path.join(BASE_DIR, "node_modules", "moment"),
+    os.path.join(BASE_DIR, "node_modules", "angular-moment"),
+    os.path.join(BASE_DIR, "node_modules", "angularjs-scroll-glue"),
     os.path.join(BASE_DIR, "oldsanta", "static"),
 )
 
@@ -157,12 +161,12 @@ PIPELINE = {
     "JAVASCRIPT": {
         "clubadm": {
             "source_filenames": (
-                "angular/angular.min.js",
-                "angular-i18n/angular-locale_ru-ru.js",
-                "moment/min/moment.min.js",
-                "moment/locale/ru.js",
-                "angular-moment/angular-moment.min.js",
-                "angular-scroll-glue/src/scrollglue.js",
+                "angular.min.js",
+                "angular-locale_ru-ru.js",
+                "min/moment.min.js",
+                "locale/ru.js",
+                "angular-moment.min.js",
+                "src/scrollglue.js",
                 "clubadm/clubadm.js",
             ),
             "output_filename": "clubadm.js",
@@ -172,6 +176,8 @@ PIPELINE = {
         "pipeline.compilers.less.LessCompiler",
     ),
     "DISABLE_WRAPPER": True,
+    "LESS_BINARY": os.path.join(BASE_DIR, "node_modules", ".bin", "lessc"),
+    "YUGLIFY_BINARY": os.path.join(BASE_DIR, "node_modules", ".bin", "yuglify"),
 }
 
 
