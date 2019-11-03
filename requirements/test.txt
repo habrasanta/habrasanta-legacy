@@ -4,4 +4,4 @@ django-debug-toolbar==1.5
 django-pipeline==1.6.8
 djangorestframework==3.4.4
 jinja2==2.8
-requests==2.11.0
+requests==2.20.0
