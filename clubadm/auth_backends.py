@@ -50,6 +50,8 @@ class TechMediaBackend(ModelBackend):
     def get_user(self, user_id):
         try:
             user = User.objects.get_by_id(user_id)
-        except User.DoesNotExist:
+        except:
+            return None
+        if not user.remote:
             return None
         return user
