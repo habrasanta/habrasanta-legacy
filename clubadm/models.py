@@ -98,6 +98,8 @@ class User(models.Model):
     GENDER_FEMALE = 2
     GENDER_UNKNOWN = 0
 
+    BADGE_ID = 1018
+
     username = models.CharField("имя пользователя", max_length=25, unique=True)
     access_token = models.CharField("токен доступа", blank=True, max_length=40)
     is_oldfag = models.BooleanField("старый участник", default=False, help_text=
@@ -206,9 +208,20 @@ class User(models.Model):
         return self.remote.get("is_readonly", True)
 
     @property
+    def has_badge(self):
+        badges = self.remote.get("badges")
+        if not badges:
+            return False
+        for badge in badges:
+            if badge.get("id") == self.BADGE_ID:
+                return True
+        return False
+
+    @property
     def can_participate(self):
         invited = not self.is_readonly and not self.is_readcomment
-        return not self.is_banned and invited and (self.is_oldfag or
+        good_guy = self.is_oldfag or self.has_badge
+        return not self.is_banned and invited and (good_guy or
             self.karma >= settings.CLUBADM_KARMA_LIMIT)
 
     def send_notification(self, title, template_name, context=None):
