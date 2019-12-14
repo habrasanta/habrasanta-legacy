@@ -106,7 +106,7 @@
             <div class="card-front receiving"
                  ng-if="member.santa.is_gift_sent && !member.is_gift_received">
               <img src="/static/images/gift_sent2.png" alt="Подарок в пути">
-              <h3>Тебе отправили подарок</h3>
+              <h3>Вам отправили подарок</h3>
               <p>
                 Наберись терпения и не&nbsp;забывай проверять почту, твой
                 подарок уже в&nbsp;пути.
@@ -125,7 +125,7 @@
             <div class="card-front card-nothing-sent"
                  ng-if="!member.santa.is_gift_sent">
               <img src="/static/images/nothing_sent.png">
-              Тебе пока ничего<br>не отправили
+              Вам пока ничего<br>не отправили
             </div>
             <div class="card-back chat" ng-if="member.santa">
               <div class="chat-view" scroll-glue>
