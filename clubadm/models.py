@@ -177,7 +177,11 @@ class User(models.Model):
     @property
     def avatar(self):
         default = "https://habrahabr.ru/i/avatars/stub-user-middle.gif"
-        return self.remote.get("avatar", default)
+        # Временный хак, пока разрабы Хабра не исправят API.
+        url = self.remote.get("avatar", default)
+        if url == "https://habr.com/images/avatars/stub-user-middle.gif":
+            return default
+        return url
 
     @property
     def karma(self):
@@ -213,6 +217,9 @@ class User(models.Model):
         if not badges:
             return False
         for badge in badges:
+            # Временный хак, пока разрабы Хабра не пофиксят свой API:
+            if isinstance(badge, str):
+                badge = badges[badge]
             if badge.get("id") == self.BADGE_ID:
                 return True
         return False
