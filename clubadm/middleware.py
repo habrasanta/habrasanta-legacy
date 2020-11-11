@@ -23,3 +23,12 @@ class MemberMiddleware(object):
                     request.user, year)
             except Member.DoesNotExist:
                 request.member = None
+
+
+class XUserMiddleware(object):
+    def process_response(self, request, response):
+        if request.user.is_anonymous:
+            return response
+        # Чтобы Nginx мог писать имя пользователя в логи
+        response["X-User"] = request.user.username
+        return response

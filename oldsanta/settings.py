@@ -59,6 +59,7 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.security.SecurityMiddleware",
     "clubadm.middleware.SeasonMiddleware",
     "clubadm.middleware.MemberMiddleware",
+    "clubadm.middleware.XUserMiddleware",
 )
 
 ROOT_URLCONF = "oldsanta.urls"
