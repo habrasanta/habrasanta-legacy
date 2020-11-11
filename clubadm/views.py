@@ -87,7 +87,7 @@ def home(request):
 def welcome(request, year):
     if request.user.is_authenticated:
         return redirect("profile", year=year)
-    login_url = _create_login_url(request, '/{}/profile'.format(year))
+    login_url = _create_login_url(request, '/{}/profile/'.format(year))
     return render(request, "clubadm/welcome.html", {
         "season": request.season,
         "login_url": login_url,
