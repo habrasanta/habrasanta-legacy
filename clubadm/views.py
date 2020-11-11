@@ -115,6 +115,11 @@ def login(request):
 
 
 def callback(request):
+    redirect_to = request.GET.get("next", reverse("home"))
+
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(redirect_to)
+
     if "error" in request.GET:
         return redirect("home")
 
@@ -129,7 +134,6 @@ def callback(request):
     user = authenticate(access_token=response.json().get("access_token"))
     auth_login(request, user)
 
-    redirect_to = request.GET.get("next", reverse("home"))
     return HttpResponseRedirect(redirect_to)
 
 
