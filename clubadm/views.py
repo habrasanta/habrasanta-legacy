@@ -59,6 +59,21 @@ def _ajax_view(member_required=False, match_required=False):
     return decorator
 
 
+def _create_login_url(request, next):
+    redirect_uri = "{callback}?{params}".format(
+        callback=reverse("callback"),
+        params=urlencode({ "next": next })
+    )
+    return "{login_url}?{params}".format(
+        login_url=settings.TMAUTH_LOGIN_URL,
+        params=urlencode({
+            "client_id": settings.TMAUTH_CLIENT,
+            "response_type": "code",
+            "redirect_uri": request.build_absolute_uri(redirect_uri),
+        })
+    )
+
+
 def home(request):
     try:
         season = Season.objects.latest()
@@ -72,8 +87,10 @@ def home(request):
 def welcome(request, year):
     if request.user.is_authenticated:
         return redirect("profile", year=year)
+    login_url = _create_login_url(request, '/{}/profile'.format(year))
     return render(request, "clubadm/welcome.html", {
         "season": request.season,
+        "login_url": login_url,
     })
 
 
@@ -103,15 +120,8 @@ def profile_legacy(request):
 
 
 def login(request):
-    redirect_uri = "%s?%s" % (reverse("callback"), urlencode({
-        "next": request.GET.get("next", reverse("home"))
-    }))
-
-    return HttpResponseRedirect("%s?%s" % (settings.TMAUTH_LOGIN_URL, urlencode({
-        "client_id": settings.TMAUTH_CLIENT,
-        "response_type": "code",
-        "redirect_uri": request.build_absolute_uri(redirect_uri),
-    })))
+    next = request.GET.get("next", reverse("home"))
+    return HttpResponseRedirect(_create_login_url(request, next))
 
 
 def callback(request):
