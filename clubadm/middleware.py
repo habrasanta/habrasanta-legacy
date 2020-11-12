@@ -27,6 +27,8 @@ class MemberMiddleware(object):
 
 class XUserMiddleware(object):
     def process_response(self, request, response):
+        if not hasattr(request, "user"):
+            return response
         if request.user.is_anonymous:
             return response
         # Чтобы Nginx мог писать имя пользователя в логи
