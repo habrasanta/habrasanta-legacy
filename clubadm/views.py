@@ -139,7 +139,11 @@ def callback(request):
         "client_id": settings.TMAUTH_CLIENT,
         "client_secret": settings.TMAUTH_SECRET
     })
-    response.raise_for_status()
+
+    if response.status_code != 200:
+        logger.warning(response.text)
+        return HttpResponse("Хабр вернул ошибку. Попробуйте снова.",
+                            content_type="text/plain;charset=utf-8")
 
     user = authenticate(access_token=response.json().get("access_token"))
     auth_login(request, user)
