@@ -85,12 +85,13 @@ class Season(models.Model):
 
 class UserManager(models.Manager):
     def get_by_id(self, user_id):
-        user_key = "user:%d" % int(user_id)
-        user = cache.get(user_key)
-        if not user:
-            user = self.get(pk=user_id)
-            cache.set(user_key, user, timeout=None)
-        return user
+        #user_key = "user:%d" % int(user_id)
+        #user = cache.get(user_key)
+        #if not user:
+        #    user = self.get(pk=user_id)
+        #    cache.set(user_key, user, timeout=None)
+        #return user
+        return self.get(pk=user_id)
 
 
 class User(models.Model):
