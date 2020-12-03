@@ -13,6 +13,7 @@ from django.utils.http import urlencode
 
 from clubadm.models import Season, Member, Mail
 from clubadm.serializers import SeasonSerializer, MemberSerializer, UserSerializer
+from clubadm.signals import member_enrolled, member_unenrolled, giftee_mailed, santa_mailed, gift_sent, gift_received
 
 
 logger = logging.getLogger(__name__)
@@ -162,9 +163,10 @@ def signup(request):
     serializer = MemberSerializer(data=request.POST)
     if not serializer.is_valid():
         raise _AjaxException("Форма заполнена неверно")
-    serializer.save(season=request.season, user=request.user)
+    member = serializer.save(season=request.season, user=request.user)
     cache.delete(request.season.cache_key)
     request.season.members += 1
+    member_enrolled.send(sender=Member, request=request, member=member)
     return _AjaxResponse({
         "season": SeasonSerializer(request.season).data,
         "member": serializer.data,
@@ -178,6 +180,7 @@ def signout(request):
     request.member.delete()
     cache.delete(request.season.cache_key)
     request.season.members -= 1
+    member_unenrolled.send(sender=Member, request=request)
     return _AjaxResponse({
         "season": SeasonSerializer(request.season).data,
         "member": None,
@@ -200,6 +203,7 @@ def send_mail(request):
                 "season": request.season
             }
         )
+        giftee_mailed.send(sender=Member, request=request)
     elif recipient == "santa":
         request.member.send_mail(body, request.member.santa)
         request.member.santa.user.send_notification(
@@ -208,6 +212,7 @@ def send_mail(request):
                 "season": request.season
             }
         )
+        santa_mailed.send(sender=Member, request=request)
     else:
         raise _AjaxException("Неизвестный получатель")
     return _AjaxResponse({
@@ -247,6 +252,7 @@ def send_gift(request):
     request.season.sent += 1
     request.member.giftee.user.send_notification(
         "Вам отправлен подарок", "clubadm/notifications/gift_sent.html")
+    gift_sent.send(sender=Member, request=request)
     return _AjaxResponse({
         "season": SeasonSerializer(request.season).data,
         "member": MemberSerializer(request.member).data,
@@ -264,6 +270,7 @@ def receive_gift(request):
     request.season.received += 1
     request.member.santa.user.send_notification(
         "Ваш подарок получен", "clubadm/notifications/gift_received.html")
+    gift_received.send(sender=Member, request=request)
     return _AjaxResponse({
         "season": SeasonSerializer(request.season).data,
         "member": MemberSerializer(request.member).data,

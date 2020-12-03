@@ -8,6 +8,7 @@ from django.views.decorators.cache import never_cache
 
 from clubadm.forms import SeasonForm
 from clubadm.models import Member, Season, User
+from clubadm.signals import user_banned, user_unbanned
 from clubadm.tasks import match_members
 
 
@@ -153,6 +154,16 @@ class UserAdmin(admin.ModelAdmin):
                 return "Для пользователя снято ограничение по карме."
         return super(UserAdmin, self).construct_change_message(
             request, form, formsets, add)
+
+    def save_model(self, request, obj, form, change):
+        if change and "is_banned" in form.changed_data:
+            was_banned = form.initial["is_banned"]
+            is_banned = form.cleaned_data["is_banned"]
+            if was_banned and not is_banned:
+                user_unbanned.send(sender=User, request=request, user=obj)
+            elif not was_banned and is_banned:
+                user_banned.send(sender=User, request=request, user=obj)
+        super(UserAdmin, self).save_model(request, obj, form, change)
 
     def view_on_site(self, obj):
         return "https://habrahabr.ru/users/%s/" % obj.username
