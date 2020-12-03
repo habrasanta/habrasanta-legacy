@@ -29,6 +29,7 @@ INSTALLED_APPS = (
     "rest_framework",
     "pipeline",
     "clubadm",
+    "actionlog",
 )
 
 LANGUAGE_CODE = "ru-ru"
