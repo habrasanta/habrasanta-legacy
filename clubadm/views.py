@@ -10,6 +10,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.http import urlencode
+from django.middleware.csrf import get_token
 
 from clubadm.models import Season, Member, Mail
 from clubadm.serializers import SeasonSerializer, MemberSerializer, UserSerializer
@@ -68,9 +69,10 @@ def _create_login_url(request, next):
     return "{login_url}?{params}".format(
         login_url=settings.TMAUTH_LOGIN_URL,
         params=urlencode({
+            "redirect_uri": request.build_absolute_uri(redirect_uri),
             "client_id": settings.TMAUTH_CLIENT,
             "response_type": "code",
-            "redirect_uri": request.build_absolute_uri(redirect_uri),
+            "state": get_token(request),
         })
     )
 
