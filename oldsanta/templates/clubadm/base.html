@@ -30,6 +30,21 @@
       if (legacyPath.indexOf("/") == 0) {
         window.location.replace(legacyPath);
       }
+      window.onerror = function(message, source, lineno, colno, error) {
+        fetch("/jserror", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: JSON.stringify({
+            msg: message,
+            src: source,
+            pos: [ lineno, colno ],
+            err: error,
+          }),
+        });
+      }
     </script>
     {% javascript "clubadm" %}
   </body>

@@ -275,3 +275,13 @@ def receive_gift(request):
         "season": SeasonSerializer(request.season).data,
         "member": MemberSerializer(request.member).data,
     })
+
+
+def jserror(request):
+    if not request.body:
+        return HttpResponse("No payload")
+    logger.warning("JS: {ip} - {ua} - {payload}".format(
+        ip=request.META["REMOTE_ADDR"],
+        ua=request.META.get("HTTP_USER_AGENT", "-"),
+        payload=json.loads(request.body)))
+    return HttpResponse("OK")
