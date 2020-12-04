@@ -67,7 +67,7 @@ def log_giftee_mail(sender, request, **kwargs):
     entry.save()
 
 
-@receiver(giftee_mailed, dispatch_uid="actionlog.log_gift_reception")
+@receiver(gift_received, dispatch_uid="actionlog.log_gift_reception")
 def log_gift_reception(sender, request, **kwargs):
     entry = LogEntry(type=LogEntry.GIFT_RECEIVED,
                      user=request.user, target_season=request.season,
@@ -75,7 +75,7 @@ def log_gift_reception(sender, request, **kwargs):
     entry.save()
 
 
-@receiver(giftee_mailed, dispatch_uid="actionlog.log_gift_shipment")
+@receiver(gift_sent, dispatch_uid="actionlog.log_gift_shipment")
 def log_gift_shipment(sender, request, **kwargs):
     entry = LogEntry(type=LogEntry.GIFT_SENT,
                      user=request.user, target_season=request.season,
