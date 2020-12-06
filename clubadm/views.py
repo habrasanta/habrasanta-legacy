@@ -1,6 +1,7 @@
 import json
 import logging
 import requests
+import html
 
 from django.conf import settings
 from django.contrib.auth import authenticate, login as auth_login
@@ -112,7 +113,7 @@ def profile(request, year):
 
     return render(request, "clubadm/profile.html", {
         "season": request.season,
-        "prefetched": json.dumps(prefetched, ensure_ascii=False),
+        "prefetched": html.escape(json.dumps(prefetched, ensure_ascii=False), quote=False),
     })
 
 
