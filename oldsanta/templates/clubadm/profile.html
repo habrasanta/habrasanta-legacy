@@ -177,8 +177,8 @@
                 Зарегистрировать участника
               </button>
               <div ng-if="!member && !user.can_participate && season.is_participatable"
-                   class="card-closed">
-                Вы не можете участвовать в АДМ-{{ season.year }}.
+                   class="card-closed card-banned">
+                Нужен <a href="https://habr.com/ru/docs/help/registration/#standard" target="_blank">полноправный аккаунт</a> с кармой от +10
               </div>
               <div class="card-closed"
                    ng-if="!member && !season.is_participatable">
