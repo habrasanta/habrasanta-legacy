@@ -78,6 +78,15 @@ def _create_login_url(request, next):
     )
 
 
+def _send_email(user_id, subject, body):
+    requests.post("http://192.168.15.20:8080/users/{}/email".format(user_id), json={
+        "subject": subject,
+        "body": body,
+    }, headers={
+        "X-Dumb-CSRF-Protection": "yes",
+    })
+
+
 def home(request):
     try:
         season = Season.objects.latest()
@@ -155,6 +164,23 @@ def callback(request):
     return HttpResponseRedirect(redirect_to)
 
 
+def unsubscribe(request):
+    user_id = int(request.GET.get("uid"))
+    response = requests.post("http://192.168.15.20:8080/users/{}/unsubscribe".format(user_id), json={
+        "token": request.GET.get("token"),
+    }, headers={
+        "X-Dumb-CSRF-Protection": "yes",
+        "X-Real-IP": request.META["REMOTE_ADDR"],
+    })
+    if response.status_code != 200:
+        logger.warning(response.text)
+        return HttpResponse("Мы честно пытались отписать вас, но произошла ошибка. Напишите, пожалуйста, <support@habra-adm.ru>.",
+                            content_type="text/plain;charset=utf-8")
+    return render(request, "clubadm/unsubscribed.html", {
+        "email": response.json().get("email"),
+    })
+
+
 @_ajax_view(member_required=False, match_required=False)
 def signup(request):
     if not request.season.is_participatable:
@@ -206,6 +232,9 @@ def send_mail(request):
                 "season": request.season
             }
         )
+        _send_email(request.member.giftee.user.id, "Новое сообщение от Деда Мороза",
+            "Здравствуйте, {}!\n\nВаш Дед Мороз написал вам что-то в анонимном чатике! ".format(request.member.giftee.user.username) +
+            "Посмотреть сообщение можно в профиле: https://habra-adm.ru/{}/profile/".format(request.season.year))
         giftee_mailed.send(sender=Member, request=request)
     elif recipient == "santa":
         request.member.send_mail(body, request.member.santa)
@@ -215,6 +244,9 @@ def send_mail(request):
                 "season": request.season
             }
         )
+        _send_email(request.member.santa.user.id, "Новое сообщение от получателя подарка",
+            "Дед Мороз {}, здравствуйте!\n\nВаш получатель написал вам что-то в анонимном чатике! ".format(request.member.santa.user.username) +
+            "Посмотреть сообщение можно в профиле: https://habra-adm.ru/{}/profile/".format(request.season.year))
         santa_mailed.send(sender=Member, request=request)
     else:
         raise _AjaxException("Неизвестный получатель")
@@ -255,6 +287,9 @@ def send_gift(request):
     request.season.sent += 1
     request.member.giftee.user.send_notification(
         "Вам отправлен подарок", "clubadm/notifications/gift_sent.html")
+    _send_email(request.member.giftee.user.id, "Вам отправлен подарок",
+        "Здравствуйте, {}!\n\nВаш Дед Мороз отметил на сайте, что подарок уже в пути. ".format(request.member.giftee.user.username) +
+        "Не забудьте и вы отметить на сайте, когда он придет!")
     gift_sent.send(sender=Member, request=request)
     return _AjaxResponse({
         "season": SeasonSerializer(request.season).data,
@@ -273,6 +308,9 @@ def receive_gift(request):
     request.season.received += 1
     request.member.santa.user.send_notification(
         "Ваш подарок получен", "clubadm/notifications/gift_received.html")
+    _send_email(request.member.santa.user.id, "Вам отправлен подарок",
+        "Дед Мороз {}, здравствуйте!\n\nВаш получатель отметил на сайте, что подарок получен. ".format(request.member.santa.user.username) +
+        "Это очень круто!")
     gift_received.send(sender=Member, request=request)
     return _AjaxResponse({
         "season": SeasonSerializer(request.season).data,

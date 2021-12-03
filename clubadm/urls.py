@@ -21,6 +21,7 @@ urlpatterns = [
     url(r"^profile$", views.profile_legacy),
     #url(r"^admin/", admin.site.urls),
     url(r"^jserror$", views.jserror, name="jserror"),
+    url(r"^unsubscribe$", views.unsubscribe),
 ]
 
 
