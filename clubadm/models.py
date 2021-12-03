@@ -103,6 +103,7 @@ class User(models.Model):
 
     username = models.CharField("имя пользователя", max_length=25, unique=True)
     access_token = models.CharField("токен доступа", blank=True, max_length=40)
+    email_token = models.CharField("токен для отписки", blank=True, max_length=32)
     is_oldfag = models.BooleanField("старый участник", default=False, help_text=
                                     "Отметьте, чтобы снять ограничение кармы.")
     is_banned = models.BooleanField("забанен", default=False)

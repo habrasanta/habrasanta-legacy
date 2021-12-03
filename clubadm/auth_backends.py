@@ -1,4 +1,5 @@
 import requests
+import secrets
 
 from django.conf import settings
 from django.contrib.auth.backends import ModelBackend
@@ -19,6 +20,7 @@ class TechMediaBackend(ModelBackend):
             user = User.objects.get_by_id(user_id)
         except User.DoesNotExist:
             user = User(pk=user_id, username=username)
+            user.email_token = secrets.token_urlsafe(24)
             changed = True
         if user.username != username:
             user.username = username
