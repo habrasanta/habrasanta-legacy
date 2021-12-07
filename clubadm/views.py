@@ -245,7 +245,7 @@ def send_mail(request):
             }
         )
         _send_email(request.member.santa.user.id, "Новое сообщение от получателя подарка",
-            "Дед Мороз {}, здравствуйте!\n\nВаш получатель написал вам что-то в анонимном чатике! ".format(request.member.santa.user.username) +
+            "Привет, Дед Мороз {}!\n\nВаш получатель написал вам что-то в анонимном чатике! ".format(request.member.santa.user.username) +
             "Посмотреть сообщение можно в профиле: https://habra-adm.ru/{}/profile/".format(request.season.year))
         santa_mailed.send(sender=Member, request=request)
     else:
@@ -309,7 +309,7 @@ def receive_gift(request):
     request.member.santa.user.send_notification(
         "Ваш подарок получен", "clubadm/notifications/gift_received.html")
     _send_email(request.member.santa.user.id, "Вам отправлен подарок",
-        "Дед Мороз {}, здравствуйте!\n\nВаш получатель отметил на сайте, что подарок получен. ".format(request.member.santa.user.username) +
+        "Привет, Дед Мороз {}!\n\nВаш получатель отметил на сайте, что подарок получен. ".format(request.member.santa.user.username) +
         "Это очень круто!")
     gift_received.send(sender=Member, request=request)
     return _AjaxResponse({
