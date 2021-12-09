@@ -12,6 +12,7 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.http import urlencode
 from django.middleware.csrf import get_token
+from django.db.models import F
 
 from clubadm.models import Season, Member, Mail
 from clubadm.serializers import SeasonSerializer, MemberSerializer, UserSerializer
@@ -290,6 +291,7 @@ def send_gift(request):
     _send_email(request.member.giftee.user.id, "Вам отправлен подарок",
         "Здравствуйте, {}!\n\nВаш Дед Мороз отметил на сайте, что подарок уже в пути. ".format(request.member.giftee.user.username) +
         "Не забудьте и вы отметить на сайте, когда он придет!")
+    Season.objects.filter(year = request.season.year).update(shipped_count = F("shipped_count") + 1)
     gift_sent.send(sender=Member, request=request)
     return _AjaxResponse({
         "season": SeasonSerializer(request.season).data,
@@ -311,6 +313,7 @@ def receive_gift(request):
     _send_email(request.member.santa.user.id, "Вам отправлен подарок",
         "Привет, Дед Мороз {}!\n\nВаш получатель отметил на сайте, что подарок получен. ".format(request.member.santa.user.username) +
         "Это очень круто!")
+    Season.objects.filter(year = request.season.year).update(delivered_count = F("delivered_count") + 1)
     gift_received.send(sender=Member, request=request)
     return _AjaxResponse({
         "season": SeasonSerializer(request.season).data,

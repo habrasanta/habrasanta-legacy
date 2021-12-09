@@ -46,6 +46,9 @@ class Season(models.Model):
     ship_by = models.DateField("последний срок отправки подарка", help_text=
                                "После этой даты сезон закрывается и уходит в"
                                "архив.")
+    member_count = models.IntegerField("кол-во участников")
+    shipped_count = models.IntegerField("сколько отправили")
+    delivered_count = models.IntegerField("сколько получили")
 
     objects = SeasonManager()
 
