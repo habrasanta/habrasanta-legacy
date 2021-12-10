@@ -310,7 +310,7 @@ def receive_gift(request):
     request.season.received += 1
     request.member.santa.user.send_notification(
         "Ваш подарок получен", "clubadm/notifications/gift_received.html")
-    _send_email(request.member.santa.user.id, "Вам отправлен подарок",
+    _send_email(request.member.santa.user.id, "Ваш подарок получен",
         "Привет, Дед Мороз {}!\n\nВаш получатель отметил на сайте, что подарок получен. ".format(request.member.santa.user.username) +
         "Это очень круто!")
     Season.objects.filter(year = request.season.year).update(delivered_count = F("delivered_count") + 1)
